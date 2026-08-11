@@ -1,3 +1,4 @@
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar({
@@ -6,7 +7,10 @@ function Navbar({
   setIsLoggedIn,
   setUser,
   onSignIn,
+  isAdmin,
+  setIsAdmin,
 }) {
+  const navigate = useNavigate();
   return (
     <header className="navbar">
       <div className="navbar-container">
@@ -19,14 +23,34 @@ function Navbar({
           </h2>
 
           <nav>
-            <a href="/" className="active">
+            <NavLink
+            to="/"
+            end
+            className={({isActive})=> isActive?"active":""}
+            >
               Films
-            </a>
+            </NavLink>
 
-            {isLoggedIn && (
-              <a href="/bookings">
+            {isLoggedIn &&(
+              <NavLink
+                to="/bookings"
+                className={({ isActive }) =>
+                isActive ? "active" : ""
+                }
+              >
                 My Bookings
-              </a>
+              </NavLink>
+            )}
+
+            {isAdmin && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                isActive ? "active" : ""
+                }
+              >
+                Admin
+              </NavLink>
             )}
           </nav>
 
@@ -66,6 +90,8 @@ function Navbar({
                 onClick={() => {
                   setIsLoggedIn(false);
                   setUser(null);
+                  setIsAdmin(false);
+                  navigate("/");
                 }}
               >
                 Sign Out

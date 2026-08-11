@@ -1,0 +1,49 @@
+.table-container {
+  margin-top: 40px;
+  margin-bottom: 45px;
+  background: #121221;
+  border: 1px solid #2c2c46;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #151526;
+}
+
+th {
+  text-align: left;
+  color:#4A4A6A;
+  padding: 18px 20px;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+tbody tr {
+  border-top: 1px solid #23233b;
+}
+
+td {
+  padding: 18px 20px;
+  color: #8888AA;
+}
+.booking-refrence{
+  color: #C9922A;
+}
+.booking-title{
+    color :#F0EDE8;
+}
+.booking-total{
+    color: #F0EDE8;
+}
+.status.confirmed{
+    color: #22c55e;
+}
+.status.cancelled{
+    color: #ef4444;
+}

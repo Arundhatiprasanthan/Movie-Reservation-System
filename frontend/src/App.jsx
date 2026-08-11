@@ -1,17 +1,16 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 import { useState } from "react";
 
 import Home from "./pages/Home/Home";
 import MovieDetails from "./pages/MovieDetails/MovieDetails";
 import SeatSelection from "./pages/SeatSelection/SeatSelection";
 import OrderSummary from "./pages/OrderSummary/OrderSummary";
+import Admin from "./pages/Admin/Admin";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin,setIsAdmin] = useState(false);
 
-  const [user, setUser] = useState({
-    name: "Alex Rivera",
-    role: "Member",
-  });
+  const [user, setUser] = useState(null);
 
   return (
     <Routes>
@@ -23,6 +22,8 @@ function App() {
             setIsLoggedIn={setIsLoggedIn}
             user={user}
             setUser={setUser}
+            isAdmin={isAdmin}
+            setIsAdmin={setIsAdmin}
           />
         }
       />
@@ -41,6 +42,14 @@ function App() {
         }
       />
       <Route path="/summary" element={<OrderSummary />} />
+      <Route path="/admin" 
+        element={isAdmin?<Admin 
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              user={user}
+              setUser={setUser}
+              isAdmin={isAdmin}
+              setIsAdmin={setIsAdmin}/>:<NavLink to="/"/>}/>
     </Routes>
   );
 }
