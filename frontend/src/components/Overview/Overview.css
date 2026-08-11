@@ -1,0 +1,13 @@
+.overview-tab{
+    margin-left: 116px;
+    margin-right: 140px;
+    height: 35vh;
+}
+.overview-tab h2{
+    color: #F0EDE8;
+}
+.overview-tab p{
+    color: #8888AA;
+    margin-top: 15px;
+    font-size:large;
+}

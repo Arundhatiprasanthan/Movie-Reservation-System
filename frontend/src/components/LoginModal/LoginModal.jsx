@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./LoginModal.css";
 
-function LoginModal({ onClose, onLogin, setUser }) {
+function LoginModal({ onClose, onLogin, setUser, setIsAdmin }) {
   const [isRegister, setIsRegister] = useState(false);
 
   return (
@@ -94,9 +94,32 @@ function LoginModal({ onClose, onLogin, setUser }) {
                 <button
                   type="button"
                   className="demo-user"
-                  onClick={onLogin}
+                  onClick={() => {
+                    setUser({
+                      name: "Alex Rivera",
+                      role: "Member",
+                    });
+
+                    setIsAdmin(false);
+                    onLogin();
+                  }}
                 >
                   Member — Alex Rivera
+                </button>
+                <button
+                  type="button"
+                  className="demo-admin"
+                  onClick={() => {
+                    setUser({
+                      name: "Morgan Adeyemi",
+                      role: "Admin",
+                    });
+
+                    setIsAdmin(true);
+                    onLogin();
+                  }}
+                >
+                  Admin - Morgan Adeyemi
                 </button>
               </div>
 
@@ -107,7 +130,7 @@ function LoginModal({ onClose, onLogin, setUser }) {
       name: "Alex Rivera",
       role: "Member",
     });
-
+    setIsAdmin(false);
     onLogin();
   }}
 >
