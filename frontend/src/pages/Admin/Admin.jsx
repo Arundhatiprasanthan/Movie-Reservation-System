@@ -20,7 +20,7 @@ const stats = [
   },
   {
     title: "Revenue",
-    value: "$14.7",
+    value: "₹14.7",
   },
 ];
 

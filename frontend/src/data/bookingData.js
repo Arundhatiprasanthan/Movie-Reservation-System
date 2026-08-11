@@ -5,7 +5,7 @@ const booking = [
     title: "Neon Frontier",
     customer:"Alex Rivera",
     seats :"F12",
-    total:"$14.7",
+    total:"₹14.7",
     status:"confirmed",
   },
   {
@@ -14,7 +14,7 @@ const booking = [
     title: "Whispers in the Deep",
     customer:"Alex Rivera",
     seats :"A8,D18,F12",
-    total:"$56.7",
+    total:"₹56.7",
     status:"cancelled",
   },
 ];
