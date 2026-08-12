@@ -1,0 +1,239 @@
+.seat-page {
+  min-height: 100vh;
+  background: #090812;
+  color: #fff;
+  padding: 40px 80px;
+}
+
+/* ===================== */
+/* MOVIE INFO */
+/* ===================== */
+
+.movie-info h1 {
+  font-size: 54px;
+  font-family: Georgia, serif;
+  margin-bottom: 10px;
+  color: #f5f1ee;
+}
+
+.movie-info p {
+  color: #a6a0d4;
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.movie-info span {
+  color: #d9a32b;
+  font-weight: 600;
+}
+
+/* ===================== */
+/* SCREEN */
+/* ===================== */
+
+.screen {
+  width: 700px;
+  margin: 0 auto 50px;
+  text-align: center;
+  color: #7f7aa6;
+  letter-spacing: 5px;
+  font-size: 13px;
+  position: relative;
+}
+
+.screen::before {
+  content: "";
+  position: absolute;
+  top: 24px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #d7a22d,
+    transparent
+  );
+}
+
+/* ===================== */
+/* SEATS */
+/* ===================== */
+
+.seat-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.row-label {
+  width: 18px;
+  color: #7e78ab;
+  font-size: 15px;
+}
+
+.seat {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: .25s;
+}
+
+/* Available */
+
+.available {
+  background: #42415d;
+}
+
+.available:hover {
+  background: #58567c;
+}
+
+/* Selected */
+
+.selected {
+  background: #d9a32b;
+}
+
+/* Reserved */
+
+.reserved {
+  background: #1b1a28;
+  cursor: not-allowed;
+}
+
+/* Blocked */
+
+.blocked {
+  background: #5b213b;
+}
+
+/* ===================== */
+/* LEGEND */
+/* ===================== */
+
+.seat-legend {
+  margin-top: 45px;
+  display: flex;
+  justify-content: center;
+  gap: 45px;
+}
+
+.seat-legend div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #9b97be;
+  font-size: 17px;
+}
+
+.legend {
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+}
+
+.legend.available {
+  background: #42415d;
+}
+
+.legend.selected {
+  background: #d9a32b;
+}
+
+.legend.reserved {
+  background: #1b1a28;
+}
+
+.legend.blocked {
+  background: #5b213b;
+}
+
+/* ===================== */
+/* BOTTOM BAR */
+/* ===================== */
+
+.bottom-bar {
+  margin-top: 60px;
+  border-top: 1px solid #2b2940;
+  padding-top: 35px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selected-info h3 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.selected-info span {
+  color: #d9a32b;
+}
+
+.selected-info p {
+  font-size: 22px;
+  color: #b6b2d6;
+}
+
+.continue-btn {
+  width: 180px;
+  height: 60px;
+  border: none;
+  border-radius: 14px;
+  background: #d9a32b;
+  color: #000;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.continue-btn:hover {
+  background: #efb63c;
+}
+
+.continue-btn:disabled {
+  background: #2c2b3d;
+  color: #777;
+  cursor: not-allowed;
+}
+
+/* ===================== */
+/* RESPONSIVE */
+/* ===================== */
+
+@media(max-width:1000px){
+
+.seat-page{
+padding:30px;
+}
+
+.movie-info h1{
+font-size:38px;
+}
+
+.screen{
+width:100%;
+}
+
+.bottom-bar{
+flex-direction:column;
+gap:30px;
+}
+
+.seat{
+width:24px;
+height:24px;
+}
+
+}

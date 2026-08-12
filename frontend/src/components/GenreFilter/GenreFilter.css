@@ -1,0 +1,43 @@
+.genre-filter{
+
+    display:flex;
+
+    gap:14px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:38px;
+}
+
+.genre{
+
+    padding:10px 22px;
+
+    border-radius:999px;
+
+    background:#1B1A28;
+
+    border:1px solid var(--border);
+
+    color:#D5D3E4;
+
+    transition:.25s;
+
+    font-size:14px;
+}
+
+.genre:hover{
+
+    border-color:var(--primary);
+
+    color:white;
+}
+
+.genre.active{
+
+    background:var(--primary);
+
+    color:#111;
+
+    font-weight:600;
+}

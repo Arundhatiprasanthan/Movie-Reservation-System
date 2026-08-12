@@ -1,0 +1,19 @@
+.home-container{
+
+    min-height:100vh;
+
+    background:var(--bg);
+}
+.home-container{
+
+    padding:45px 0 80px;
+}
+
+.page-title{
+
+    font-size:64px;
+
+    margin-bottom:10px;
+
+    color:white;
+}

@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root{
+
+    --bg:#0A0913;
+    --navbar:#0E0D18;
+    --card:#151420;
+
+    --primary:#D6A02D;
+    --primary-hover:#E5B03D;
+
+    --border:#2B2A44;
+
+    --text:#F7F5F2;
+    --text-secondary:#8E8AA8;
+
+    --seat:#4B4969;
+    --seat-selected:#D6A02D;
+    --seat-reserved:#1F1D2C;
+    --seat-blocked:#63283F;
+
+    --radius:14px;
+
+    --transition:0.25s ease;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    background:var(--bg);
+    color:var(--text);
+
+    font-family:'Inter',sans-serif;
+
+    overflow-x:hidden;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button{
+
+    border:none;
+
+    cursor:pointer;
+
+    font-family:'Inter',sans-serif;
+}
+
+input{
+
+    outline:none;
+
+    font-family:'Inter',sans-serif;
+}
+
+h1,h2,h3,h4{
+
+    font-family:'Cormorant Garamond',serif;
+
+    font-weight:700;
+}
+
+.container{
+
+    width:92%;
+
+    max-width:1400px;
+
+    margin:auto;
+}

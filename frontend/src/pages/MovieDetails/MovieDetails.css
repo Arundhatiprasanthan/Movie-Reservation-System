@@ -1,0 +1,161 @@
+.movie-details-page{
+    max-width:1200px;
+    margin:0 auto;
+    padding:50px 20px 80px;
+    color:#fff;
+}
+
+.movie-banner{
+    display:flex;
+    gap:50px;
+    align-items:flex-start;
+}
+
+/* LEFT */
+
+.movie-left img{
+    width:300px;
+    height:430px;
+    object-fit:cover;
+    border-radius:20px;
+}
+
+/* RIGHT */
+
+.movie-right{
+    flex:1;
+}
+
+.movie-info-top{
+    color:#77759b;
+    font-size:13px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:18px;
+}
+
+.movie-title{
+    font-size:64px;
+    font-family:Georgia, serif;
+    line-height:1;
+    margin-bottom:20px;
+}
+
+.age-badge{
+    display:inline-block;
+    border:1px solid #3a3953;
+    padding:7px 14px;
+    border-radius:8px;
+    color:#bdbdd8;
+    font-size:14px;
+    margin-bottom:28px;
+}
+
+.movie-description{
+    width:680px;
+    color:#d6d6d6;
+    font-size:18px;
+    line-height:1.8;
+    margin-bottom:40px;
+}
+
+/* DIRECTOR & CAST */
+
+.info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:80px;
+    margin-bottom:55px;
+}
+
+.info-item span{
+    color:#77759b;
+    letter-spacing:2px;
+    font-size:13px;
+}
+
+.info-item h4{
+    margin-top:12px;
+    font-size:20px;
+    font-weight:500;
+    color:#fff;
+    line-height:1.6;
+}
+
+/* SHOWTIME */
+
+.showtime-heading{
+    font-size:36px;
+    margin-bottom:30px;
+}
+
+.showtime-group{
+    margin-bottom:35px;
+}
+
+.showtime-day{
+    color:#77759b;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-size:13px;
+    margin-bottom:18px;
+}
+
+.showtime-cards{
+    display:flex;
+    gap:18px;
+}
+
+.showtime-card{
+    width:150px;
+    padding:18px;
+    border-radius:16px;
+    border:1px solid #34334a;
+    background:#191826;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.showtime-card:hover{
+    border-color:#d8a329;
+    transform:translateY(-4px);
+}
+
+.showtime-card h3{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+.showtime-card p{
+    color:#9c9cb7;
+    font-size:14px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:992px){
+
+.movie-banner{
+    flex-direction:column;
+}
+
+.movie-left{
+    width:100%;
+    display:flex;
+    justify-content:center;
+}
+
+.movie-description{
+    width:100%;
+}
+
+.info-grid{
+    grid-template-columns:1fr;
+    gap:30px;
+}
+
+.showtime-cards{
+    flex-wrap:wrap;
+}
+
+}
