@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 
 export default function SeatSelectionScreen({ film, theaterName, timeStr, onBack, onContinue }) {
-  const pricePerSeat = 14;
+  const pricePerSeat = 250;
   const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
   const cols = Array.from({ length: 14 }, (_, i) => i + 1);
 
@@ -36,7 +36,7 @@ export default function SeatSelectionScreen({ film, theaterName, timeStr, onBack
       <div>
         <h1 className="seat-movie-title">Seat Selection</h1>
         <div className="seat-movie-sub">
-          {film?.title || 'Ember & Ash'} · {theaterName || 'Grand Hall'} · Sat, Jul 25 · {timeStr || '11:00 AM'} · <span className="price-tag">${pricePerSeat}</span> / seat
+          {film?.title || 'Ember & Ash'} · {theaterName || 'Grand Hall'} · Sat, Jul 25 · {timeStr || '11:00 AM'} · <span className="price-tag">₹{pricePerSeat}</span> / seat
         </div>
       </div>
 
@@ -110,7 +110,7 @@ export default function SeatSelectionScreen({ film, theaterName, timeStr, onBack
               {selectedSeats.length} {selectedSeats.length === 1 ? 'seat' : 'seats'}: <span>{selectedSeats.join(', ')}</span>
             </div>
             <div className="seat-total-price">
-              Total: <span>${totalPrice}</span>
+              Total: <span>₹{totalPrice}</span>
             </div>
           </div>
         )}

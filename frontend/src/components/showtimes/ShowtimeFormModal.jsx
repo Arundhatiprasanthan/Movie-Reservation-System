@@ -86,7 +86,7 @@ export default function ShowtimeFormModal({ movies, theaters, onClose, onSubmit 
         </div>
 
         <div>
-          <label className="label mb-1.5 block">Price ($)</label>
+          <label className="label mb-1.5 block">Price (₹)</label>
           <input
             type="number"
             min="0"

@@ -56,16 +56,16 @@ export default function OrderSummaryScreen({ film, theaterName, timeStr, selecte
               <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{selectedSeats.join(', ')}</span>
             </div>
             <div className="order-line-item">
-              <span>{selectedSeats.length} × $14</span>
-              <span>${subtotal}</span>
+              <span>{selectedSeats.length} × ₹{selectedSeats.length > 0 ? (subtotal / selectedSeats.length) : 250}</span>
+              <span>₹{subtotal}</span>
             </div>
             <div className="order-line-item">
               <span>Service fee (5%)</span>
-              <span>${serviceFee}</span>
+              <span>₹{serviceFee}</span>
             </div>
             <div className="order-line-item total">
               <span>Total</span>
-              <span>${grandTotal}</span>
+              <span>₹{grandTotal}</span>
             </div>
           </div>
         </div>

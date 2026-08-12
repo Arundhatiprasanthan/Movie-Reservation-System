@@ -122,20 +122,20 @@ export default function AdminDashboard({ films: externalFilms, setFilms: externa
 
   // Exact 14 Showtimes from Screenshot 1
   const [showtimes, setShowtimes] = useState([
-    { id: 1, film: 'Neon Frontier', theater: 'Grand Hall', dateTime: 'Fri, Jul 24 · 2:30 PM', price: '$16', occupancy: '126/126' },
-    { id: 2, film: 'Neon Frontier', theater: 'Premiere Suite', dateTime: 'Fri, Jul 24 · 7:00 PM', price: '$18', occupancy: '84/84' },
-    { id: 3, film: 'Neon Frontier', theater: 'Grand Hall', dateTime: 'Sat, Jul 25 · 11:00 AM', price: '$14', occupancy: '126/126' },
-    { id: 4, film: 'The Venetian Heist', theater: 'Premiere Suite', dateTime: 'Fri, Jul 24 · 4:45 PM', price: '$18', occupancy: '84/84' },
-    { id: 5, film: 'The Venetian Heist', theater: 'Studio Screen', dateTime: 'Fri, Jul 24 · 9:00 PM', price: '$16', occupancy: '60/60' },
-    { id: 6, film: 'The Venetian Heist', theater: 'Grand Hall', dateTime: 'Sat, Jul 25 · 6:30 PM', price: '$18', occupancy: '126/126' },
-    { id: 7, film: 'Ember & Ash', theater: 'Studio Screen', dateTime: 'Fri, Jul 24 · 1:00 PM', price: '$14', occupancy: '60/60' },
-    { id: 8, film: 'Ember & Ash', theater: 'Premiere Suite', dateTime: 'Sat, Jul 25 · 8:15 PM', price: '$18', occupancy: '84/84' },
-    { id: 9, film: 'Razorback', theater: 'Grand Hall', dateTime: 'Fri, Jul 24 · 5:00 PM', price: '$16', occupancy: '126/126' },
-    { id: 10, film: 'Razorback', theater: 'Premiere Suite', dateTime: 'Sat, Jul 25 · 2:00 PM', price: '$16', occupancy: '84/84' },
-    { id: 11, film: 'The Laughing Fox', theater: 'Studio Screen', dateTime: 'Fri, Jul 24 · 3:30 PM', price: '$14', occupancy: '60/60' },
-    { id: 12, film: 'The Laughing Fox', theater: 'Grand Hall', dateTime: 'Sun, Jul 26 · 12:00 PM', price: '$14', occupancy: '126/126' },
-    { id: 13, film: 'Whispers in the Deep', theater: 'Premiere Suite', dateTime: 'Fri, Jul 24 · 10:30 PM', price: '$18', occupancy: '84/84' },
-    { id: 14, film: 'Whispers in the Deep', theater: 'Studio Screen', dateTime: 'Sat, Jul 25 · 9:45 PM', price: '$16', occupancy: '60/60' }
+    { id: 1, film: 'Neon Frontier', theater: 'Grand Hall', dateTime: 'Fri, Jul 24 · 2:30 PM', price: '₹250', occupancy: '126/126' },
+    { id: 2, film: 'Neon Frontier', theater: 'Premiere Suite', dateTime: 'Fri, Jul 24 · 7:00 PM', price: '₹300', occupancy: '84/84' },
+    { id: 3, film: 'Neon Frontier', theater: 'Grand Hall', dateTime: 'Sat, Jul 25 · 11:00 AM', price: '₹200', occupancy: '126/126' },
+    { id: 4, film: 'The Venetian Heist', theater: 'Premiere Suite', dateTime: 'Fri, Jul 24 · 4:45 PM', price: '₹300', occupancy: '84/84' },
+    { id: 5, film: 'The Venetian Heist', theater: 'Studio Screen', dateTime: 'Fri, Jul 24 · 9:00 PM', price: '₹250', occupancy: '60/60' },
+    { id: 6, film: 'The Venetian Heist', theater: 'Grand Hall', dateTime: 'Sat, Jul 25 · 6:30 PM', price: '₹300', occupancy: '126/126' },
+    { id: 7, film: 'Ember & Ash', theater: 'Studio Screen', dateTime: 'Fri, Jul 24 · 1:00 PM', price: '₹200', occupancy: '60/60' },
+    { id: 8, film: 'Ember & Ash', theater: 'Premiere Suite', dateTime: 'Sat, Jul 25 · 8:15 PM', price: '₹300', occupancy: '84/84' },
+    { id: 9, film: 'Razorback', theater: 'Grand Hall', dateTime: 'Fri, Jul 24 · 5:00 PM', price: '₹250', occupancy: '126/126' },
+    { id: 10, film: 'Razorback', theater: 'Premiere Suite', dateTime: 'Sat, Jul 25 · 2:00 PM', price: '₹250', occupancy: '84/84' },
+    { id: 11, film: 'The Laughing Fox', theater: 'Studio Screen', dateTime: 'Fri, Jul 24 · 3:30 PM', price: '₹200', occupancy: '60/60' },
+    { id: 12, film: 'The Laughing Fox', theater: 'Grand Hall', dateTime: 'Sun, Jul 26 · 12:00 PM', price: '₹200', occupancy: '126/126' },
+    { id: 13, film: 'Whispers in the Deep', theater: 'Premiere Suite', dateTime: 'Fri, Jul 24 · 10:30 PM', price: '₹300', occupancy: '84/84' },
+    { id: 14, film: 'Whispers in the Deep', theater: 'Studio Screen', dateTime: 'Sat, Jul 25 · 9:45 PM', price: '₹250', occupancy: '60/60' }
   ]);
 
   const [bookings] = useState([]);
@@ -167,7 +167,7 @@ export default function AdminDashboard({ films: externalFilms, setFilms: externa
   const [selectedFilmForShow, setSelectedFilmForShow] = useState('');
   const [selectedTheaterForShow, setSelectedTheaterForShow] = useState('');
   const [showDateTime, setShowDateTime] = useState('');
-  const [ticketPrice, setTicketPrice] = useState('16');
+  const [ticketPrice, setTicketPrice] = useState('250');
 
   // Modal State for Admin Seat Map View (Matching User Screenshot)
   const [selectedSeatMapShowtime, setSelectedSeatMapShowtime] = useState(null);
@@ -217,7 +217,7 @@ export default function AdminDashboard({ films: externalFilms, setFilms: externa
     setSelectedFilmForShow(films[0]?.title || 'Neon Frontier');
     setSelectedTheaterForShow(theaters[0]?.name || 'Grand Hall');
     setShowDateTime('');
-    setTicketPrice('16');
+    setTicketPrice('250');
     setIsAddShowtimeModalOpen(true);
   };
 
@@ -324,7 +324,7 @@ export default function AdminDashboard({ films: externalFilms, setFilms: externa
       film: selectedFilmForShow,
       theater: selectedTheaterForShow,
       dateTime: dateFormatted,
-      price: ticketPrice.startsWith('$') ? ticketPrice : `$${ticketPrice}`,
+      price: ticketPrice.startsWith('₹') ? ticketPrice : `₹${ticketPrice}`,
       occupancy: `${capStr}/${capStr}`
     };
 
@@ -372,7 +372,7 @@ export default function AdminDashboard({ films: externalFilms, setFilms: externa
         </div>
         <div className="kpi-card">
           <div className="kpi-label">REVENUE</div>
-          <div className="kpi-value">$0.00</div>
+          <div className="kpi-value">₹0.00</div>
         </div>
       </div>
 
@@ -789,11 +789,11 @@ export default function AdminDashboard({ films: externalFilms, setFilms: externa
               </div>
 
               <div className="form-group">
-                <label className="form-label">TICKET PRICE ($)</label>
+                <label className="form-label">TICKET PRICE (₹)</label>
                 <input
                   type="number"
                   className="form-input"
-                  placeholder="16"
+                  placeholder="250"
                   value={ticketPrice}
                   onChange={(e) => setTicketPrice(e.target.value)}
                   required

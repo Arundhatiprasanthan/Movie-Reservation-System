@@ -131,7 +131,7 @@ export default function MyBookings({ bookings = [], onBrowseClick, onCancelBooki
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem', flexShrink: 0 }}>
               <div style={{ color: 'var(--accent-gold)', fontWeight: 800, fontSize: '1.25rem' }}>
-                ${b.totalAmount}
+                ₹{b.totalAmount}
               </div>
               <button
                 type="button"

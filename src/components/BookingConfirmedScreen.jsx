@@ -107,18 +107,18 @@ export default function BookingConfirmedScreen({ booking, onGoToBookings, onBrow
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.92rem', color: '#8E95B3' }}>
               <span>Subtotal</span>
-              <span>${booking.subtotal}</span>
+              <span>₹{booking.subtotal}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.92rem', color: '#8E95B3' }}>
               <span>Service fee</span>
-              <span>${serviceFee}</span>
+              <span>₹{serviceFee}</span>
             </div>
 
             <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.08)', margin: '0.3rem 0' }} />
 
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.05rem', fontWeight: 700, color: '#FFFFFF' }}>
               <span>Total Charged</span>
-              <span style={{ color: 'var(--accent-gold)' }}>${totalCharged}</span>
+              <span style={{ color: 'var(--accent-gold)' }}>₹{totalCharged}</span>
             </div>
           </div>
         </div>

@@ -139,7 +139,7 @@ export default function PaymentScreen({ grandTotal, user, onBack, onCompletePaym
                 <span>Processing Payment...</span>
               </>
             ) : (
-              <span>Pay ${grandTotal} & Confirm</span>
+              <span>Pay ₹{grandTotal} & Confirm</span>
             )}
           </button>
         </form>
