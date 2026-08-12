@@ -26,7 +26,7 @@ const createShowtime = async (req, res) => {
         .json({ message: "movieId, theaterId, screenId, startTime, and price are required" });
     }
 
-    const [movie, screen] = await Promise.all([
+   const [movie, screen] = await Promise.all([
       Movie.findById(movieId),
       Screen.findById(screenId),
     ]);
@@ -34,6 +34,9 @@ const createShowtime = async (req, res) => {
     if (!movie) return res.status(404).json({ message: "Movie not found" });
     if (!screen) return res.status(404).json({ message: "Screen not found" });
 
+    if (screen.theater.toString() !== theaterId) {
+      return res.status(400).json({ message: "This screen does not belong to the specified theater" });
+    }
     const start = new Date(startTime);
     const end = new Date(start.getTime() + movie.duration * 60000);
 
@@ -94,7 +97,24 @@ const getShowtimeById = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch showtime", error: err.message });
   }
 };
+// @route  GET /api/admin/showtimes/:id/seats
+// Returns a quick summary of seat statuses instead of the full showtime object
+const getShowtimeSeats = async (req, res) => {
+  try {
+    const showtime = await Showtime.findById(req.params.id).select("seats");
+    if (!showtime) return res.status(404).json({ message: "Showtime not found" });
 
+    const summary = { capacity: showtime.seats.length, available: [], held: [], reserved: [], blocked: [] };
+
+    showtime.seats.forEach((seat) => {
+      summary[seat.status].push(seat.seatLabel);
+    });
+
+    res.status(200).json(summary);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch seat summary", error: err.message });
+  }
+};
 // @route  PUT /api/admin/showtimes/:id
 // Only allows editing startTime/price directly; seat map is managed separately
 const updateShowtime = async (req, res) => {
@@ -161,4 +181,5 @@ module.exports = {
   updateShowtime,
   deleteShowtime,
   setSeatBlockedStatus,
+  getShowtimeSeats,
 };
