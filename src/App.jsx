@@ -94,12 +94,7 @@ const INITIAL_FILMS = [
 
 export default function App() {
   const [films, setFilms] = useState(INITIAL_FILMS);
-  const [user, setUser] = useState({
-    name: 'Alex Rivera',
-    email: 'alex.rivera@example.com',
-    role: 'USER',
-    token: 'mock-jwt-token'
-  });
+  const [user, setUser] = useState(null);
 
   const [activeTab, setActiveTab] = useState('films'); // 'films' | 'bookings' | 'admin'
   const [isAuthOpen, setIsAuthOpen] = useState(false);
