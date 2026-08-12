@@ -66,4 +66,16 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+// @route  GET /api/auth/me
+const getMe = async (req, res) => {
+  try {
+    res.status(200).json({
+      user: { id: req.user._id, name: req.user.name, email: req.user.email, role: req.user.role },
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error getting user profile", error: err.message });
+  }
+};
+
+module.exports = { register, login, getMe };
+
