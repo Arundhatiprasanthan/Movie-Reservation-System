@@ -176,7 +176,7 @@ export default function App() {
     setBookingStep('payment');
   };
 
-  // Step 4: Click "Pay $X & Confirm" on Payment Screen
+  // Step 4: Click "Pay ₹X & Confirm" on Payment Screen
   const handleCompletePayment = () => {
     const refCode = 'BKQ3QFB' + Math.floor(1 + Math.random() * 9);
     const newBooking = {

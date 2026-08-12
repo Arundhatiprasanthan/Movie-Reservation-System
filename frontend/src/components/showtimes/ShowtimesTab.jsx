@@ -72,7 +72,7 @@ export default function ShowtimesTab({ movies, theaters, showtimes, onChanged })
                   <td className="px-4 py-3 font-medium text-ivory">{movie?.title || "—"}</td>
                   <td className="px-4 py-3 text-gold-400">{theater?.name || "—"}</td>
                   <td className="px-4 py-3 text-muted">{formatDateTime(s.startTime)}</td>
-                  <td className="px-4 py-3 text-ivory">${s.price}</td>
+                  <td className="px-4 py-3 text-ivory">₹{s.price}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="h-1.5 w-24 overflow-hidden rounded-full bg-ink-700">
