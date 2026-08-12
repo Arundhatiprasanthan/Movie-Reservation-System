@@ -1,0 +1,78 @@
+.seat-map-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  padding: 1rem 0;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.sm-seat {
+  width: 40px;
+  height: 28px;
+  border-radius: 5px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s;
+  user-select: none;
+  border: 1px solid transparent;
+}
+
+.sm-seat:hover {
+  transform: scale(1.1);
+}
+
+.sm-seat-available {
+  background: #1f2d1f;
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.sm-seat-reserved {
+  background: #2d1f1f;
+  border-color: #ef4444;
+  color: #ef4444;
+  cursor: not-allowed;
+}
+
+.sm-seat-blocked {
+  background: #1a1f2e;
+  border-color: #6b7280;
+  color: #6b7280;
+}
+
+.sm-seat-held {
+  background: #2d2a1f;
+  border-color: #f59e0b;
+  color: #f59e0b;
+  cursor: not-allowed;
+}
+
+.seat-map-legend {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid #222630;
+  margin-top: 0.5rem;
+}
+
+.sm-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: #a0a5b5;
+}
+
+.sm-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}

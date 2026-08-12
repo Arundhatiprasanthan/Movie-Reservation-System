@@ -1,19 +1,16 @@
 import Modal from "./Modal.jsx";
+import "./ConfirmDialog.css";
 
-export default function ConfirmDialog({ title, message, confirmLabel = "Remove", onConfirm, onCancel, busy }) {
+export default function ConfirmDialog({ title, message, confirmLabel = "Confirm", onConfirm, onCancel, busy }) {
   return (
-    <Modal title={title} onClose={onCancel} width="max-w-sm">
-      <p className="text-sm text-muted">{message}</p>
-      <div className="mt-6 flex justify-end gap-3">
-        <button className="btn-secondary" onClick={onCancel} disabled={busy}>
+    <Modal title={title} onClose={onCancel}>
+      <p className="confirm-message">{message}</p>
+      <div className="confirm-actions">
+        <button className="confirm-cancel-btn" onClick={onCancel} disabled={busy}>
           Cancel
         </button>
-        <button
-          className="btn-primary bg-red-500/90 hover:bg-red-500"
-          onClick={onConfirm}
-          disabled={busy}
-        >
-          {busy ? "Removing…" : confirmLabel}
+        <button className="confirm-ok-btn" onClick={onConfirm} disabled={busy}>
+          {busy ? "Processing…" : confirmLabel}
         </button>
       </div>
     </Modal>

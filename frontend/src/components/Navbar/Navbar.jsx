@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { logoutUser } from "../../api/auth";
 import "./Navbar.css";
 
 function Navbar({
@@ -11,6 +12,15 @@ function Navbar({
   setIsAdmin,
 }) {
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logoutUser();
+    setIsLoggedIn(false);
+    setUser(null);
+    setIsAdmin(false);
+    navigate("/");
+  };
+
   return (
     <header className="navbar">
       <div className="navbar-container">
@@ -18,25 +28,23 @@ function Navbar({
         {/* Left Side */}
         <div className="nav-left">
 
-          <h2 className="logo">
+          <h2 className="logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
             <span className="gold">CINÉ</span>VAULT
           </h2>
 
           <nav>
             <NavLink
-            to="/"
-            end
-            className={({isActive})=> isActive?"active":""}
+              to="/"
+              end
+              className={({ isActive }) => (isActive ? "active" : "")}
             >
               Films
             </NavLink>
 
-            {isLoggedIn &&(
+            {isLoggedIn && (
               <NavLink
-                to="/bookings"
-                className={({ isActive }) =>
-                isActive ? "active" : ""
-                }
+                to="/my-bookings"
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
                 My Bookings
               </NavLink>
@@ -45,11 +53,9 @@ function Navbar({
             {isAdmin && (
               <NavLink
                 to="/admin"
-                className={({ isActive }) =>
-                isActive ? "active" : ""
-                }
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
-                Admin
+                Admin Dashboard
               </NavLink>
             )}
           </nav>
@@ -75,24 +81,19 @@ function Navbar({
               <div className="user-profile">
 
                 <div className="avatar">
-                  {user?.name?.charAt(0)}
+                  {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
                 </div>
 
                 <div className="user-text">
-                  <h4>{user?.name}</h4>
-                  <p>{user?.role}</p>
+                  <h4>{user?.name || "Member"}</h4>
+                  <p>{user?.role === "admin" ? "Admin" : "Member"}</p>
                 </div>
 
               </div>
 
               <button
                 className="logout-btn"
-                onClick={() => {
-                  setIsLoggedIn(false);
-                  setUser(null);
-                  setIsAdmin(false);
-                  navigate("/");
-                }}
+                onClick={handleLogout}
               >
                 Sign Out
               </button>

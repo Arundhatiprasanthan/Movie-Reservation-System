@@ -1,99 +1,215 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import "./OrderSummary.css";
 
+import rapidStrike from "../../assets/images/movies/rapid-strike.png";
+import silentReckoning from "../../assets/images/movies/silent-reckoning.png";
+import eclipse from "../../assets/images/movies/eclipse.png";
+import beyondForever from "../../assets/images/movies/beyond-forever.png";
+import whispersInTheDark from "../../assets/images/movies/the-whispers-in-the-dark.png";
+
 function OrderSummary() {
+  const navigate = useNavigate();
+  const { state } = useLocation();
 
-    const navigate = useNavigate();
-
-    const { state } = useLocation();
-
-    const { movie, seats, theatre, time, date } = state;
-
-    const subtotal = seats.length * movie.ticketPrice;
-
-    const convenienceFee = 50;
-
-    const gst = Math.round(subtotal * 0.18);
-
-    const total = subtotal + convenienceFee + gst;
-
+  if (!state || !state.movie || !state.seats) {
     return (
+      <div
+        className="summary-page"
+        style={{
+          textAlign: "center",
+          paddingTop: "5rem",
+        }}
+      >
+        <h2>No booking selected</h2>
 
-        <div className="summary-page">
+        <button
+          onClick={() => navigate("/")}
+          className="pay-btn"
+          style={{ marginTop: "1.5rem" }}
+        >
+          Return to Films
+        </button>
+      </div>
+    );
+  }
 
-            <h1>Booking Summary</h1>
+  const {
+    movie,
+    seats,
+    theatre,
+    time,
+    date,
+    price,
+    showtimeId,
+  } = state;
 
-            <div className="summary-card">
+  const ticketPrice =
+    price || movie.ticketPrice || 350;
 
-                <img
-                    src={movie.poster}
-                    alt={movie.title}
-                />
+  const subtotal =
+    seats.length * ticketPrice;
 
-                <div className="summary-details">
+  const convenienceFee = 50;
 
-                    <h2>{movie.title}</h2>
+  const gst =
+    Math.round(subtotal * 0.18);
 
-                    <p>{movie.genre}</p>
+  const total =
+    subtotal + convenienceFee + gst;
 
-                    <p>{date}</p>
+  // --------------------------------------------------
+  // MOVIE POSTER
+  // --------------------------------------------------
 
-                    <p>{time}</p>
+  const movieImages = {
+    "Rapid Strike": rapidStrike,
+    "Silent Reckoning": silentReckoning,
+    Eclipse: eclipse,
+    "Beyond Forever": beyondForever,
+    "The Whispers in the Dark": whispersInTheDark,
+  };
 
-                    <p>{theatre}</p>
+  const poster =
+    movieImages[movie.title] ||
+    movie.posterUrl ||
+    movie.poster ||
+    eclipse;
 
-                    <p>
-                        Seats:
-                        <span>{seats.join(", ")}</span>
-                    </p>
+  // --------------------------------------------------
+  // GENRE
+  // --------------------------------------------------
 
-                </div>
+  const genreText = Array.isArray(movie.genre)
+    ? movie.genre.join(", ")
+    : movie.genre || "Genre unavailable";
 
-            </div>
+  // --------------------------------------------------
+  // PAYMENT DATA
+  // --------------------------------------------------
 
-            <div className="price-box">
+  const paymentData = {
+    showtimeId,
+    movie,
+    seats,
+    theatre,
+    time,
+    date,
+    price: ticketPrice,
+    subtotal,
+    convenienceFee,
+    gst,
+    total,
+  };
 
-                <div>
-                    <span>Tickets</span>
+  // --------------------------------------------------
+  // RENDER
+  // --------------------------------------------------
 
-                    <span>₹{subtotal}</span>
-                </div>
+  return (
+    <div className="summary-page">
 
-                <div>
-                    <span>Convenience Fee</span>
+      <h1>Booking Summary</h1>
 
-                    <span>₹50</span>
-                </div>
+      <div className="summary-card">
 
-                <div>
-                    <span>GST</span>
+        <img
+          src={poster}
+          alt={movie.title}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = eclipse;
+          }}
+        />
 
-                    <span>₹{gst}</span>
-                </div>
+        <div className="summary-details">
 
-                <hr />
+          <h2>{movie.title}</h2>
 
-                <div className="total">
+          <p>{genreText}</p>
 
-                    <span>Total</span>
+          <p>
+            📅 {date}
+          </p>
 
-                    <span>₹{total}</span>
+          <p>
+            ⏰ {time}
+          </p>
 
-                </div>
+          <p>
+            📍 {theatre}
+          </p>
 
-            </div>
+          <p>
+            Seats:{" "}
+            <span>
+              {seats.join(", ")}
+            </span>
+          </p>
 
-            <button
-                className="pay-btn"
-                onClick={() => navigate("/payment")}
-            >
-                Proceed to Payment →
-            </button>
+        </div>
+      </div>
+
+      <div className="price-box">
+
+        <div>
+          <span>
+            Tickets ({seats.length} × ₹{ticketPrice})
+          </span>
+
+          <span>
+            ₹{subtotal}
+          </span>
+        </div>
+
+        <div>
+          <span>
+            Convenience Fee
+          </span>
+
+          <span>
+            ₹{convenienceFee}
+          </span>
+        </div>
+
+        <div>
+          <span>
+            GST (18%)
+          </span>
+
+          <span>
+            ₹{gst}
+          </span>
+        </div>
+
+        <hr />
+
+        <div className="total">
+
+          <span>
+            Total Amount
+          </span>
+
+          <span>
+            ₹{total}
+          </span>
 
         </div>
 
-    );
+      </div>
 
+      <button
+        className="pay-btn"
+        onClick={() =>
+          navigate("/payment", {
+            state: paymentData,
+          })
+        }
+      >
+        Proceed to Payment →
+      </button>
+
+    </div>
+  );
 }
 
 export default OrderSummary;

@@ -3,20 +3,21 @@ import "./GenreFilter.css";
 const genres = [
   "All",
   "Sci-Fi",
-  "Thriller",
-  "Drama",
   "Action",
-  "Comedy",
+  "Thriller",
+  "Romance",
   "Horror",
+  "Drama",
 ];
 
-function GenreFilter() {
+function GenreFilter({ selectedGenre, setSelectedGenre }) {
   return (
     <div className="genre-filter">
-      {genres.map((genre, index) => (
+      {genres.map((genre) => (
         <button
           key={genre}
-          className={index === 0 ? "genre active" : "genre"}
+          className={(selectedGenre || "All") === genre ? "genre active" : "genre"}
+          onClick={() => setSelectedGenre(genre)}
         >
           {genre}
         </button>

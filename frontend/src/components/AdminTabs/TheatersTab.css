@@ -1,0 +1,55 @@
+.theaters-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.theater-block {
+  background: #14161c;
+  border: 1px solid #222630;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.theater-block:hover {
+  border-color: rgba(197, 168, 128, 0.3);
+}
+
+.theater-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 1.4rem;
+  cursor: pointer;
+}
+
+.theater-name {
+  font-size: 1.05rem;
+  color: #f0ede8;
+  margin: 0 0 0.2rem;
+}
+
+.theater-location {
+  font-size: 0.83rem;
+  color: #a0a5b5;
+  margin: 0;
+}
+
+.theater-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.expand-arrow {
+  color: #a0a5b5;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+.screens-section {
+  border-top: 1px solid #222630;
+  background: #0f1117;
+  padding: 0;
+}

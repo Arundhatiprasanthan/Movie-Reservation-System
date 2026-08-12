@@ -1,11 +1,7 @@
 import "./AdminTabs.css";
 
-function AdminTabs({
-  activeTab,
-
-  setActiveTab,
-}) {
-  const tabs = ["Overview", "Movies", "Theaters", "Showtimes"];
+function AdminTabs({ activeTab, setActiveTab }) {
+  const tabs = ["Overview", "Movies", "Theaters", "Showtimes", "Users"];
 
   return (
     <div className="admin-tabs">
