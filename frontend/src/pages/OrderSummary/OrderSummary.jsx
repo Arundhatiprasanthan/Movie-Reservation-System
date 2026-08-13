@@ -11,6 +11,10 @@ function OrderSummary() {
   const navigate = useNavigate();
   const { state } = useLocation();
 
+  // --------------------------------------------------
+  // CHECK BOOKING DATA
+  // --------------------------------------------------
+
   if (!state || !state.movie || !state.seats) {
     return (
       <div
@@ -33,6 +37,10 @@ function OrderSummary() {
     );
   }
 
+  // --------------------------------------------------
+  // BOOKING STATE
+  // --------------------------------------------------
+
   const {
     movie,
     seats,
@@ -43,8 +51,18 @@ function OrderSummary() {
     showtimeId,
   } = state;
 
+  // --------------------------------------------------
+  // TICKET PRICE
+  // --------------------------------------------------
+
   const ticketPrice =
-    price || movie.ticketPrice || 350;
+    Number(price) ||
+    Number(movie.ticketPrice) ||
+    350;
+
+  // --------------------------------------------------
+  // PRICE CALCULATION
+  // --------------------------------------------------
 
   const subtotal =
     seats.length * ticketPrice;
@@ -55,10 +73,15 @@ function OrderSummary() {
     Math.round(subtotal * 0.18);
 
   const total =
-    subtotal + convenienceFee + gst;
+    subtotal +
+    convenienceFee +
+    gst;
 
   // --------------------------------------------------
-  // MOVIE POSTER
+  // LOCAL POSTERS
+  //
+  // These are ONLY FALLBACKS for the original
+  // 5 frontend movies.
   // --------------------------------------------------
 
   const movieImages = {
@@ -69,11 +92,40 @@ function OrderSummary() {
     "The Whispers in the Dark": whispersInTheDark,
   };
 
-  const poster =
-    movieImages[movie.title] ||
+  // --------------------------------------------------
+  // POSTER URL
+  //
+  // IMPORTANT:
+  // Backend/admin poster comes FIRST.
+  //
+  // This means:
+  //
+  // Admin movie posterUrl
+  //        ↓
+  // movie.poster
+  //        ↓
+  // local poster for original movies
+  //        ↓
+  // eclipse fallback
+  // --------------------------------------------------
+
+  const backendPoster =
     movie.posterUrl ||
     movie.poster ||
+    "";
+
+  const localPoster =
+    movieImages[movie.title] ||
+    "";
+
+  const poster =
+    backendPoster ||
+    localPoster ||
     eclipse;
+
+  console.log("ORDER SUMMARY MOVIE:", movie);
+  console.log("ADMIN POSTER URL:", movie.posterUrl);
+  console.log("FINAL POSTER:", poster);
 
   // --------------------------------------------------
   // GENRE
@@ -108,36 +160,76 @@ function OrderSummary() {
   return (
     <div className="summary-page">
 
+      {/* ------------------------------------------------ */}
+      {/* PAGE TITLE */}
+      {/* ------------------------------------------------ */}
+
       <h1>Booking Summary</h1>
 
+      {/* ------------------------------------------------ */}
+      {/* MOVIE SUMMARY */}
+      {/* ------------------------------------------------ */}
+
       <div className="summary-card">
+
+        {/* MOVIE POSTER */}
 
         <img
           src={poster}
           alt={movie.title}
-          onError={(e) => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = eclipse;
+          onError={(event) => {
+            console.error(
+              "Failed to load movie poster:",
+              poster
+            );
+
+            event.currentTarget.onerror = null;
+
+            // Try local poster if available
+            if (localPoster) {
+              event.currentTarget.src = localPoster;
+            } else {
+              // Final fallback
+              event.currentTarget.src = eclipse;
+            }
           }}
         />
 
+        {/* MOVIE DETAILS */}
+
         <div className="summary-details">
 
-          <h2>{movie.title}</h2>
+          {/* TITLE */}
 
-          <p>{genreText}</p>
+          <h2>
+            {movie.title}
+          </h2>
+
+          {/* GENRE */}
+
+          <p>
+            {genreText}
+          </p>
+
+          {/* DATE */}
 
           <p>
             📅 {date}
           </p>
 
+          {/* TIME */}
+
           <p>
             ⏰ {time}
           </p>
 
+          {/* THEATRE */}
+
           <p>
             📍 {theatre}
           </p>
+
+          {/* SEATS */}
 
           <p>
             Seats:{" "}
@@ -149,7 +241,13 @@ function OrderSummary() {
         </div>
       </div>
 
+      {/* ------------------------------------------------ */}
+      {/* PRICE SUMMARY */}
+      {/* ------------------------------------------------ */}
+
       <div className="price-box">
+
+        {/* TICKETS */}
 
         <div>
           <span>
@@ -161,6 +259,8 @@ function OrderSummary() {
           </span>
         </div>
 
+        {/* CONVENIENCE FEE */}
+
         <div>
           <span>
             Convenience Fee
@@ -170,6 +270,8 @@ function OrderSummary() {
             ₹{convenienceFee}
           </span>
         </div>
+
+        {/* GST */}
 
         <div>
           <span>
@@ -182,6 +284,8 @@ function OrderSummary() {
         </div>
 
         <hr />
+
+        {/* TOTAL */}
 
         <div className="total">
 
@@ -196,6 +300,10 @@ function OrderSummary() {
         </div>
 
       </div>
+
+      {/* ------------------------------------------------ */}
+      {/* PAYMENT BUTTON */}
+      {/* ------------------------------------------------ */}
 
       <button
         className="pay-btn"

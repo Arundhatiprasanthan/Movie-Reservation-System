@@ -3,6 +3,7 @@ import silentReckoning from "../../assets/images/movies/silent-reckoning.png";
 import eclipse from "../../assets/images/movies/eclipse.png";
 import beyondForever from "../../assets/images/movies/beyond-forever.png";
 import whispersInTheDark from "../../assets/images/movies/the-whispers-in-the-dark.png";
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -41,6 +42,9 @@ function MovieDetails({
       try {
         const data = await fetchPublicMovieById(id);
 
+        console.log("MOVIE DETAILS RESPONSE:", data);
+        console.log("SHOWTIMES FROM BACKEND:", data?.showtimes);
+
         if (data && data.movie) {
           setMovie(data.movie);
           setShowtimes(data.showtimes || []);
@@ -52,6 +56,8 @@ function MovieDetails({
           );
 
           setMovie(fallback || null);
+
+          // Do not create fake showtimes.
           setShowtimes([]);
         }
       } catch (error) {
@@ -67,6 +73,8 @@ function MovieDetails({
         );
 
         setMovie(fallback || null);
+
+        // Do not create fake showtimes.
         setShowtimes([]);
       } finally {
         setLoading(false);
@@ -132,22 +140,26 @@ function MovieDetails({
   }
 
   // --------------------------------------------------
-  // MOVIE DATA
+  // MOVIE IMAGES
   // --------------------------------------------------
 
- const movieImages = {
-  "Rapid Strike": rapidStrike,
-  "Silent Reckoning": silentReckoning,
-  Eclipse: eclipse,
-  "Beyond Forever": beyondForever,
-  "The Whispers in the Dark": whispersInTheDark,
-};
+  const movieImages = {
+    "Rapid Strike": rapidStrike,
+    "Silent Reckoning": silentReckoning,
+    Eclipse: eclipse,
+    "Beyond Forever": beyondForever,
+    "The Whispers in the Dark": whispersInTheDark,
+  };
 
-const poster =
-  movieImages[movie.title] ||
-  movie.posterUrl ||
-  movie.poster ||
-  eclipse;
+  const poster =
+    movieImages[movie.title] ||
+    movie.posterUrl ||
+    movie.poster ||
+    eclipse;
+
+  // --------------------------------------------------
+  // MOVIE INFORMATION
+  // --------------------------------------------------
 
   const genreStr = Array.isArray(movie.genre)
     ? movie.genre.join(", ")
@@ -161,6 +173,19 @@ const poster =
   const releaseYear = movie.releaseDate
     ? new Date(movie.releaseDate).getFullYear()
     : movie.year || 2026;
+
+  // --------------------------------------------------
+  // DIRECTOR
+  // --------------------------------------------------
+
+  const directorStr =
+    movie.director?.trim?.() ||
+    movie.director ||
+    "Director information unavailable";
+
+  // --------------------------------------------------
+  // CAST
+  // --------------------------------------------------
 
   const castStr = Array.isArray(movie.cast)
     ? movie.cast.join(", ")
@@ -177,6 +202,12 @@ const poster =
     date,
     price
   ) => {
+    // A booking must always have a real Showtime ID.
+    if (!showtimeId) {
+      console.error("No showtime ID provided.");
+      return;
+    }
+
     navigate(`/seats/${showtimeId}`, {
       state: {
         showtimeId,
@@ -196,6 +227,10 @@ const poster =
   const groupedShowtimes = {};
 
   showtimes.forEach((showtime) => {
+    if (!showtime?._id || !showtime?.startTime) {
+      return;
+    }
+
     const date = new Date(showtime.startTime);
 
     const dateKey = date
@@ -229,7 +264,9 @@ const poster =
         setIsAdmin={setIsAdmin}
       />
 
+      {/* ------------------------------------------------ */}
       {/* LOGIN MODAL */}
+      {/* ------------------------------------------------ */}
 
       {showLogin && (
         <LoginModal
@@ -243,69 +280,89 @@ const poster =
         />
       )}
 
+      {/* ------------------------------------------------ */}
       {/* MOVIE DETAILS */}
+      {/* ------------------------------------------------ */}
 
       <div className="movie-details-page">
         <div className="movie-banner">
 
+          {/* -------------------------------------------- */}
           {/* LEFT - POSTER */}
+          {/* -------------------------------------------- */}
 
           <div className="movie-left">
-           <img
-  src={poster}
-  alt={movie.title}
-  onError={(event) => {
-    event.currentTarget.onerror = null;
-    event.currentTarget.src = eclipse;
-  }}
-/>
+            <img
+              src={poster}
+              alt={movie.title}
+              onError={(event) => {
+                event.currentTarget.onerror = null;
+                event.currentTarget.src = eclipse;
+              }}
+            />
           </div>
 
+          {/* -------------------------------------------- */}
           {/* RIGHT - DETAILS */}
+          {/* -------------------------------------------- */}
 
           <div className="movie-right">
 
+            {/* MOVIE META */}
             <p className="movie-info-top">
-              {releaseYear} • {genreStr.toUpperCase()} •{" "}
+              {releaseYear} •{" "}
+              {genreStr.toUpperCase()} •{" "}
               {durationStr.toUpperCase()}
             </p>
 
+            {/* TITLE */}
             <h1 className="movie-title">
               {movie.title}
             </h1>
 
+            {/* RATING */}
             <div className="age-badge">
               {movie.rating ||
                 movie.certificate ||
                 "PG-13"}
             </div>
 
+            {/* DESCRIPTION */}
             <p className="movie-description">
               {movie.description}
             </p>
 
+            {/* ------------------------------------------ */}
             {/* DIRECTOR + CAST */}
+            {/* ------------------------------------------ */}
 
             <div className="info-grid">
+
+              {/* DIRECTOR */}
 
               <div className="info-item">
                 <span>DIRECTOR</span>
 
                 <h4>
-                  {movie.director ||
-                    "Director information unavailable"}
+                  {directorStr}
                 </h4>
               </div>
+
+              {/* CAST */}
 
               <div className="info-item">
                 <span>CAST</span>
 
-                <h4>{castStr}</h4>
+                <h4>
+                  {castStr}
+                </h4>
               </div>
 
             </div>
 
+            {/* ------------------------------------------ */}
             {/* SHOWTIMES */}
+            {/* ------------------------------------------ */}
 
             <h2 className="showtime-heading">
               Available Showtimes
@@ -321,9 +378,13 @@ const poster =
                     key={dayLabel}
                   >
 
+                    {/* DATE */}
+
                     <p className="showtime-day">
                       {dayLabel}
                     </p>
+
+                    {/* SHOWTIME CARDS */}
 
                     <div className="showtime-cards">
 
@@ -333,13 +394,14 @@ const poster =
                           showtime.startTime
                         );
 
-                        const time = startTime.toLocaleTimeString(
-                          "en-US",
-                          {
-                            hour: "numeric",
-                            minute: "2-digit",
-                          }
-                        );
+                        const time =
+                          startTime.toLocaleTimeString(
+                            "en-US",
+                            {
+                              hour: "numeric",
+                              minute: "2-digit",
+                            }
+                          );
 
                         const theatreName =
                           showtime.theater?.name ||
@@ -351,7 +413,7 @@ const poster =
 
                         const theatreDisplay =
                           screenName
-                            ? `${theatreName}`
+                            ? theatreName
                             : theatreName;
 
                         return (
@@ -369,7 +431,13 @@ const poster =
                             }
                           >
 
-                            <h3>{time}</h3>
+                            {/* TIME */}
+
+                            <h3>
+                              {time}
+                            </h3>
+
+                            {/* THEATRE + PRICE */}
 
                             <p>
                               {theatreDisplay} · ₹
@@ -387,9 +455,9 @@ const poster =
 
             ) : (
 
-              // --------------------------------------------------
-              // FALLBACK IF BACKEND HAS NO SHOWTIMES
-              // --------------------------------------------------
+              /* ---------------------------------------- */
+              /* NO BACKEND SHOWTIMES */
+              /* ---------------------------------------- */
 
               <div className="showtime-group">
 
@@ -397,51 +465,15 @@ const poster =
                   SHOWTIMES
                 </p>
 
-                <div className="showtime-cards">
+                <p
+                  style={{
+                    color: "#a0a5b5",
+                    marginTop: "0.5rem",
+                  }}
+                >
+                  No showtimes available for this movie.
+                </p>
 
-                  <div
-                    className="showtime-card"
-                    onClick={() =>
-                      goToSeats(
-                        null,
-                        "Grand Hall",
-                        "2:30 PM",
-                        "Today",
-                        movie.ticketPrice || 350
-                      )
-                    }
-                  >
-                    <h3>2:30 PM</h3>
-
-                    <p>
-                      Grand Hall · ₹
-                      {movie.ticketPrice || 350}
-                    </p>
-                  </div>
-
-                  <div
-                    className="showtime-card"
-                    onClick={() =>
-                      goToSeats(
-                        null,
-                        "Premiere Suite",
-                        "7:00 PM",
-                        "Today",
-                        (movie.ticketPrice || 350) +
-                          100
-                      )
-                    }
-                  >
-                    <h3>7:00 PM</h3>
-
-                    <p>
-                      Premiere Suite · ₹
-                      {(movie.ticketPrice || 350) +
-                        100}
-                    </p>
-                  </div>
-
-                </div>
               </div>
             )}
 

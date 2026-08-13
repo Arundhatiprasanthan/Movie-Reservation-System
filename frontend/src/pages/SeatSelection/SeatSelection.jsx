@@ -85,9 +85,15 @@ function SeatSelection({
           setShowtime(st);
 
           // Update movie from backend
-          if (st.movie) {
-            setMovie(st.movie);
-          }
+         if (st.movie) {
+  setMovie((previousMovie) => ({
+    ...previousMovie,
+    ...st.movie,
+    posterUrl:
+      st.movie.posterUrl ||
+      previousMovie?.posterUrl,
+  }));
+}
 
           // ------------------------------------------
           // GET SEAT STATUS FROM DATABASE
