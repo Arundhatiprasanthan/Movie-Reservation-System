@@ -285,10 +285,7 @@ function LoginModal({
                     type="button"
                     className="demo-user"
                     onClick={() =>
-                      handleDemoLogin(
-                        "user@cinevault.com",
-                        "user123"
-                      )
+                     handleDemoLogin("alex@gmail.com", "Alex@123")
                     }
                     disabled={loading}
                   >
@@ -299,10 +296,7 @@ function LoginModal({
                     type="button"
                     className="demo-admin"
                     onClick={() =>
-                      handleDemoLogin(
-                        "admin@cinevault.com",
-                        "admin123"
-                      )
+                      handleDemoLogin("morgan@gmail.com", "Morgan@123")
                     }
                     disabled={loading}
                   >
