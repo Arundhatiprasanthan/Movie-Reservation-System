@@ -1,0 +1,37 @@
+.admin-tabs {
+  display: flex;
+
+  gap: 35px;
+
+  border-bottom: 1px solid #243247;
+
+  margin-bottom: 35px;
+  margin-left: 116px;
+  margin-right: 130px;
+}
+
+.tab-btn {
+  background: none;
+
+  border: none;
+
+  color:#8888AA;
+
+  font-size: 17px;
+
+  padding-bottom: 15px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.tab-btn:hover {
+  color: #C9922A;
+}
+
+.tab-btn.active {
+  color: #C9922A;
+
+  border-bottom: 3px solid #C9922A;
+}

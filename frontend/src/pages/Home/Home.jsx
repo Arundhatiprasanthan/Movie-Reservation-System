@@ -11,6 +11,8 @@ function Home({
   setIsLoggedIn,
   user,
   setUser,
+  isAdmin,
+  setIsAdmin,
 }) {
   const [showLogin, setShowLogin] = useState(false);
 
@@ -22,12 +24,15 @@ function Home({
         setUser={setUser}
         setIsLoggedIn={setIsLoggedIn}
         onSignIn={() => setShowLogin(true)}
+        isAdmin={isAdmin}
+        setIsAdmin={setIsAdmin}
       />
 
       {showLogin && (
         <LoginModal
           onClose={() => setShowLogin(false)}
           setUser={setUser}
+          setIsAdmin={setIsAdmin}
           onLogin={() => {
             setIsLoggedIn(true);
             setShowLogin(false);
