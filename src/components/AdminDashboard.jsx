@@ -1,952 +1,816 @@
-import React, { useState } from 'react';
-import { Plus, X, Image as ImageIcon } from 'lucide-react';
+import { useState } from "react";
+import { Plus, Trash2, Film, Monitor, Clock, List, LogOut, DollarSign, Users, CheckCircle, Video } from "lucide-react";
 
-export default function AdminDashboard({ films: externalFilms, setFilms: externalSetFilms, onShowToast }) {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'movies' | 'theaters' | 'showtimes'
+export default function AdminDashboard({ 
+  user, 
+  onLogout,
+  movies, 
+  setMovies, 
+  theaters, 
+  setTheaters, 
+  showtimes, 
+  setShowtimes, 
+  bookings,
+  setBookings 
+}) {
+  const [activeTab, setActiveTab] = useState("Overview"); // Overview, Movies, Theaters, Showtimes
 
-  // Default fallback films if external state is not provided
-  const [internalFilms, setInternalFilms] = useState([
-    {
-      id: 1,
-      title: 'Neon Frontier',
-      genre: 'Sci-Fi',
-      duration: '142m',
-      rating: 'PG-13',
-      shows: 3,
-      poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=300&auto=format&fit=crop',
-      banner: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop',
-      year: '2026',
-      director: 'Alex Rivera',
-      cast: 'David Chen, Sarah Jenkins, Lucas Vance',
-      description: 'In a neon-drenched metropolis controlled by artificial intelligence, a rogue operative discovers a dark conspiracy that threatens to erase human consciousness.'
-    },
-    {
-      id: 2,
-      title: 'The Venetian Heist',
-      genre: 'Thriller',
-      duration: '118m',
-      rating: 'R',
-      shows: 3,
-      poster: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=300&auto=format&fit=crop',
-      banner: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=1200&auto=format&fit=crop',
-      year: '2026',
-      director: 'Marco Rossi',
-      cast: 'Elena Vance, Lucas Thorne, Roberto Blanc',
-      description: 'An international team of master thieves plan an audacious robbery during the high tide festival in Venice, navigating treacherous waters and betrayal.'
-    },
-    {
-      id: 3,
-      title: 'Ember & Ash',
-      genre: 'Drama',
-      duration: '126m',
-      rating: 'PG-13',
-      shows: 2,
-      poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=300&auto=format&fit=crop',
-      banner: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop',
-      year: '2025',
-      director: 'Sofia Al-Mansoor',
-      cast: 'Claire Redfield, Julian Vance, Hannah Kim',
-      description: 'A powerful family saga following two estranged siblings fighting to protect their ancestral vineyard amidst environmental challenges.'
-    },
-    {
-      id: 4,
-      title: 'Razorback',
-      genre: 'Action',
-      duration: '108m',
-      rating: 'R',
-      shows: 2,
-      poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=300&auto=format&fit=crop',
-      banner: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1200&auto=format&fit=crop',
-      year: '2026',
-      director: 'Jaxom Steele',
-      cast: 'Marcus Stone, Amanda Drake, Ray Jackson',
-      description: 'Stranded in the unforgiving Australian wilderness, a former special ops officer must outsmart a ruthless mercenary syndicate.'
-    },
-    {
-      id: 5,
-      title: 'The Laughing Fox',
-      genre: 'Comedy',
-      duration: '95m',
-      rating: 'PG',
-      shows: 2,
-      poster: 'https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=300&auto=format&fit=crop',
-      banner: 'https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=1200&auto=format&fit=crop',
-      year: '2026',
-      director: 'Oliver Hayes',
-      cast: 'Benny Hill, Zoe Cooper, Charles Sterling',
-      description: 'An eccentric estate manager accidentally hosts three competing wedding parties at the exact same English manor on the same weekend.'
-    },
-    {
-      id: 6,
-      title: 'Whispers in the Deep',
-      genre: 'Horror',
-      duration: '112m',
-      rating: 'R',
-      shows: 2,
-      poster: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=300&auto=format&fit=crop',
-      banner: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop',
-      year: '2026',
-      director: 'Naomi Watts',
-      cast: 'Ethan Hawke, Maya Lin, Sam Rockwell',
-      description: 'Deep sea oceanographers investigating an unmapped trench discover an ancient underwater structure harboring horrors from beyond time.'
-    }
-  ]);
-
-  const films = externalFilms || internalFilms;
-  const setFilms = externalSetFilms || setInternalFilms;
-
-  // Theaters list (Includes Grand Hall, Premiere Suite, Studio Screen, + Custom)
-  const [theaters, setTheaters] = useState([
-    {
-      id: 1,
-      name: 'Grand Hall',
-      capacity: '126 seats (9×14)',
-      description: 'Our flagship 126-seat auditorium with Dolby Atmos.',
-      activeShows: 5
-    },
-    {
-      id: 2,
-      name: 'Premiere Suite',
-      capacity: '84 seats (7×12)',
-      description: 'Premium 84-seat hall with reclining seats.',
-      activeShows: 5
-    },
-    {
-      id: 3,
-      name: 'Studio Screen',
-      capacity: '60 seats (6×10)',
-      description: 'Intimate 60-seat arthouse screen.',
-      activeShows: 4
-    }
-  ]);
-
-  // Exact 14 Showtimes from Screenshot 1
-  const [showtimes, setShowtimes] = useState([
-    { id: 1, film: 'Neon Frontier', theater: 'Grand Hall', dateTime: 'Fri, Jul 24 · 2:30 PM', price: '₹250', occupancy: '126/126' },
-    { id: 2, film: 'Neon Frontier', theater: 'Premiere Suite', dateTime: 'Fri, Jul 24 · 7:00 PM', price: '₹300', occupancy: '84/84' },
-    { id: 3, film: 'Neon Frontier', theater: 'Grand Hall', dateTime: 'Sat, Jul 25 · 11:00 AM', price: '₹200', occupancy: '126/126' },
-    { id: 4, film: 'The Venetian Heist', theater: 'Premiere Suite', dateTime: 'Fri, Jul 24 · 4:45 PM', price: '₹300', occupancy: '84/84' },
-    { id: 5, film: 'The Venetian Heist', theater: 'Studio Screen', dateTime: 'Fri, Jul 24 · 9:00 PM', price: '₹250', occupancy: '60/60' },
-    { id: 6, film: 'The Venetian Heist', theater: 'Grand Hall', dateTime: 'Sat, Jul 25 · 6:30 PM', price: '₹300', occupancy: '126/126' },
-    { id: 7, film: 'Ember & Ash', theater: 'Studio Screen', dateTime: 'Fri, Jul 24 · 1:00 PM', price: '₹200', occupancy: '60/60' },
-    { id: 8, film: 'Ember & Ash', theater: 'Premiere Suite', dateTime: 'Sat, Jul 25 · 8:15 PM', price: '₹300', occupancy: '84/84' },
-    { id: 9, film: 'Razorback', theater: 'Grand Hall', dateTime: 'Fri, Jul 24 · 5:00 PM', price: '₹250', occupancy: '126/126' },
-    { id: 10, film: 'Razorback', theater: 'Premiere Suite', dateTime: 'Sat, Jul 25 · 2:00 PM', price: '₹250', occupancy: '84/84' },
-    { id: 11, film: 'The Laughing Fox', theater: 'Studio Screen', dateTime: 'Fri, Jul 24 · 3:30 PM', price: '₹200', occupancy: '60/60' },
-    { id: 12, film: 'The Laughing Fox', theater: 'Grand Hall', dateTime: 'Sun, Jul 26 · 12:00 PM', price: '₹200', occupancy: '126/126' },
-    { id: 13, film: 'Whispers in the Deep', theater: 'Premiere Suite', dateTime: 'Fri, Jul 24 · 10:30 PM', price: '₹300', occupancy: '84/84' },
-    { id: 14, film: 'Whispers in the Deep', theater: 'Studio Screen', dateTime: 'Sat, Jul 25 · 9:45 PM', price: '₹250', occupancy: '60/60' }
-  ]);
-
-  const [bookings] = useState([]);
-
-  // Modal State for Add / Edit Film
-  const [isAddFilmModalOpen, setIsAddFilmModalOpen] = useState(false);
-  const [editingFilmId, setEditingFilmId] = useState(null);
-
-  const [title, setTitle] = useState('');
-  const [genre, setGenre] = useState('Sci-Fi');
-  const [rating, setRating] = useState('PG-13');
-  const [duration, setDuration] = useState('120');
-  const [year, setYear] = useState('2026');
-  const [director, setDirector] = useState('');
-  const [cast, setCast] = useState('');
-  const [description, setDescription] = useState('');
-  const [posterUrl, setPosterUrl] = useState('');
-  const [bannerUrl, setBannerUrl] = useState('');
-
-  // Modal State for Add Theater
-  const [isAddTheaterModalOpen, setIsAddTheaterModalOpen] = useState(false);
-  const [tName, setTName] = useState('');
-  const [rowsCount, setRowsCount] = useState(8);
-  const [seatsPerRow, setSeatsPerRow] = useState(12);
-  const [tDescription, setTDescription] = useState('');
-
-  // Modal State for Add Showtime
-  const [isAddShowtimeModalOpen, setIsAddShowtimeModalOpen] = useState(false);
-  const [selectedFilmForShow, setSelectedFilmForShow] = useState('');
-  const [selectedTheaterForShow, setSelectedTheaterForShow] = useState('');
-  const [showDateTime, setShowDateTime] = useState('');
-  const [ticketPrice, setTicketPrice] = useState('250');
-
-  // Modal State for Admin Seat Map View (Matching User Screenshot)
-  const [selectedSeatMapShowtime, setSelectedSeatMapShowtime] = useState(null);
-  const [blockedSeatsMap, setBlockedSeatsMap] = useState({
-    5: ['A4', 'B5', 'B6', 'C7', 'D8', 'E1', 'E2', 'F9']
+  // Form states
+  const [newMovie, setNewMovie] = useState({
+    title: "", genre: "Sci-Fi", duration: "", rating: "", certificate: "PG-13", year: 2026, ticketPrice: 350, director: "", cast: "", poster: "", description: ""
+  });
+  const [newTheater, setNewTheater] = useState({
+    name: "", rows: 6, cols: 10
+  });
+  const [newShowtime, setNewShowtime] = useState({
+    movieId: "", theaterId: "", time: "", date: "Today", type: "Standard", priceMultiplier: 1.0
   });
 
-  const openAddModal = () => {
-    setEditingFilmId(null);
-    setTitle('');
-    setGenre('Sci-Fi');
-    setRating('PG-13');
-    setDuration('120');
-    setYear('2026');
-    setDirector('');
-    setCast('');
-    setDescription('');
-    setPosterUrl('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop');
-    setBannerUrl('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop');
-    setIsAddFilmModalOpen(true);
-  };
+  // Calculate statistics
+  const totalRevenue = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
 
-  const openEditModal = (film) => {
-    setEditingFilmId(film.id);
-    setTitle(film.title);
-    setGenre(film.genre);
-    setRating(film.rating);
-    setDuration((film.duration || '120m').replace('m', ''));
-    setYear(film.year || '2026');
-    setDirector(film.director || '');
-    setCast(film.cast || '');
-    setDescription(film.description || '');
-    setPosterUrl(film.poster || '');
-    setBannerUrl(film.banner || film.poster || '');
-    setIsAddFilmModalOpen(true);
-  };
-
-  const openAddTheaterModal = () => {
-    setTName('');
-    setRowsCount(8);
-    setSeatsPerRow(12);
-    setTDescription('');
-    setIsAddTheaterModalOpen(true);
-  };
-
-  const openAddShowtimeModal = () => {
-    setSelectedFilmForShow(films[0]?.title || 'Neon Frontier');
-    setSelectedTheaterForShow(theaters[0]?.name || 'Grand Hall');
-    setShowDateTime('');
-    setTicketPrice('250');
-    setIsAddShowtimeModalOpen(true);
-  };
-
-  const openSeatMapModal = (showtime) => {
-    setSelectedSeatMapShowtime(showtime);
-  };
-
-  const toggleBlockSeat = (showtimeId, seatCode) => {
-    const currentBlocked = blockedSeatsMap[showtimeId] || [];
-    let updated;
-    if (currentBlocked.includes(seatCode)) {
-      updated = currentBlocked.filter(s => s !== seatCode);
-      if (onShowToast) onShowToast(`Unblocked seat ${seatCode}`);
-    } else {
-      updated = [...currentBlocked, seatCode];
-      if (onShowToast) onShowToast(`Blocked seat ${seatCode} for maintenance`);
-    }
-    setBlockedSeatsMap({
-      ...blockedSeatsMap,
-      [showtimeId]: updated
+  // Handlers
+  const handleAddMovie = (e) => {
+    e.preventDefault();
+    if (!newMovie.title || !newMovie.duration || !newMovie.rating) return;
+    
+    const createdMovie = {
+      ...newMovie,
+      id: movies.length + 1,
+      poster: newMovie.poster || "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&auto=format&fit=crop&q=60"
+    };
+    
+    setMovies([...movies, createdMovie]);
+    // Reset form
+    setNewMovie({
+      title: "", genre: "Sci-Fi", duration: "", rating: "", certificate: "PG-13", year: 2026, ticketPrice: 350, director: "", cast: "", poster: "", description: ""
     });
   };
 
-  const handleSaveFilm = (e) => {
-    e.preventDefault();
-    if (!title.trim()) return;
-
-    const formattedDuration = duration.includes('m') ? duration : `${duration}m`;
-
-    if (editingFilmId) {
-      setFilms(films.map(f => f.id === editingFilmId ? {
-        ...f,
-        title,
-        genre,
-        rating,
-        duration: formattedDuration,
-        year,
-        director,
-        cast,
-        description,
-        poster: posterUrl || f.poster,
-        banner: bannerUrl || posterUrl || f.banner
-      } : f));
-      if (onShowToast) onShowToast(`Updated "${title}" successfully`);
-    } else {
-      const newFilm = {
-        id: Date.now(),
-        title,
-        genre,
-        rating,
-        duration: formattedDuration,
-        shows: 0,
-        poster: posterUrl || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop',
-        banner: bannerUrl || posterUrl || 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop',
-        year,
-        director,
-        cast,
-        description
-      };
-      setFilms([newFilm, ...films]);
-      if (onShowToast) onShowToast(`Added "${title}" to film catalog`);
-    }
-
-    setIsAddFilmModalOpen(false);
+  const handleDeleteMovie = (id) => {
+    setMovies(movies.filter(m => m.id !== id));
+    setShowtimes(showtimes.filter(s => s.movieId !== id));
   };
 
-  const handleSaveTheater = (e) => {
+  const handleAddTheater = (e) => {
     e.preventDefault();
-    if (!tName.trim()) return;
-
-    const r = parseInt(rowsCount) || 0;
-    const s = parseInt(seatsPerRow) || 0;
-    const total = r * s;
-
-    const newTheater = {
-      id: Date.now(),
-      name: tName,
-      capacity: `${total} seats (${r}×${s})`,
-      description: tDescription || 'Modern cinema hall',
-      activeShows: 0
+    if (!newTheater.name) return;
+    
+    const createdTheater = {
+      id: theaters.length + 1,
+      name: newTheater.name,
+      rows: Number(newTheater.rows),
+      cols: Number(newTheater.cols),
+      capacity: Number(newTheater.rows) * Number(newTheater.cols)
     };
-
-    setTheaters([...theaters, newTheater]);
-    setIsAddTheaterModalOpen(false);
-    if (onShowToast) onShowToast(`Added "${tName}" theater hall`);
+    
+    setTheaters([...theaters, createdTheater]);
+    setNewTheater({ name: "", rows: 6, cols: 10 });
   };
 
-  const handleSaveShowtime = (e) => {
+  const handleAddShowtime = (e) => {
     e.preventDefault();
-    let dateFormatted = 'Sat, Jul 25 · 7:30 PM';
-    if (showDateTime) {
-      const d = new Date(showDateTime);
-      if (!isNaN(d.getTime())) {
-        dateFormatted = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) +
-          ' · ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      }
-    }
-
-    const selectedTObj = theaters.find(t => t.name === selectedTheaterForShow);
-    const capStr = selectedTObj ? selectedTObj.capacity.split(' ')[0] : '126';
-
-    const newShowtime = {
-      id: Date.now(),
-      film: selectedFilmForShow,
-      theater: selectedTheaterForShow,
-      dateTime: dateFormatted,
-      price: ticketPrice.startsWith('₹') ? ticketPrice : `₹${ticketPrice}`,
-      occupancy: `${capStr}/${capStr}`
+    if (!newShowtime.movieId || !newShowtime.theaterId || !newShowtime.time) return;
+    
+    const createdShowtime = {
+      id: showtimes.length + 101,
+      movieId: Number(newShowtime.movieId),
+      theaterId: Number(newShowtime.theaterId),
+      time: newShowtime.time,
+      date: newShowtime.date,
+      type: newShowtime.type,
+      priceMultiplier: Number(newShowtime.priceMultiplier)
     };
-
-    setShowtimes([newShowtime, ...showtimes]);
-    setIsAddShowtimeModalOpen(false);
-    if (onShowToast) onShowToast(`Scheduled showtime for "${selectedFilmForShow}" at ${selectedTheaterForShow}`);
+    
+    setShowtimes([...showtimes, createdShowtime]);
+    setNewShowtime({
+      movieId: "", theaterId: "", time: "", date: "Today", type: "Standard", priceMultiplier: 1.0
+    });
   };
 
-  const handleRemoveFilm = (id, filmTitle) => {
-    setFilms(films.filter(f => f.id !== id));
-    if (onShowToast) onShowToast(`Removed "${filmTitle}" from catalog`);
-  };
-
-  const handleRemoveTheater = (id, tName) => {
-    setTheaters(theaters.filter(t => t.id !== id));
-    if (onShowToast) onShowToast(`Removed "${tName}" theater hall`);
-  };
-
-  const handleRemoveShowtime = (id, filmName) => {
-    setShowtimes(showtimes.filter(s => s.id !== id));
-    if (onShowToast) onShowToast(`Removed showtime schedule for "${filmName}"`);
+  const handleDeleteBooking = (id) => {
+    setBookings(bookings.filter(b => b.id !== id));
   };
 
   return (
-    <div className="admin-dashboard-container">
-      {/* Title & Administrator Badge Row (Image 2) */}
-      <div className="dashboard-header-row">
-        <h1 className="dashboard-title">Admin Dashboard</h1>
-        <div className="administrator-badge">Administrator</div>
+    <div style={styles.dashboardContainer} className="animate-fade-in">
+      {/* Top Navbar */}
+      <nav style={styles.navbar}>
+        <div style={styles.navBrand}>
+          <Film size={24} color="var(--primary)" />
+          <span style={styles.brandText}>CINÉ<span style={{ color: "var(--primary)" }}>VAULT</span></span>
+        </div>
+        <div style={styles.navActions}>
+          <span className="gold-badge" style={{ marginRight: "16px" }}>
+            <Users size={12} />
+            ADMIN
+          </span>
+          <button onClick={onLogout} style={styles.signOutBtn}>
+            <LogOut size={16} />
+            Sign out
+          </button>
+        </div>
+      </nav>
+
+      {/* Header and Title */}
+      <div style={styles.dashboardHeader}>
+        <div style={styles.headerTitleGroup}>
+          <h1 style={styles.mainTitle}>Admin Dashboard</h1>
+          <span className="gold-badge" style={{ fontSize: "12px", padding: "6px 12px" }}>
+            {user.role}
+          </span>
+        </div>
       </div>
 
-      {/* KPI Cards Grid */}
-      <div className="kpi-cards-grid">
-        <div className="kpi-card">
-          <div className="kpi-label">FILMS</div>
-          <div className="kpi-value">{films.length}</div>
+      {/* Stats Row */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <span className="stat-label">Films</span>
+          <span className="stat-value">{movies.length}</span>
         </div>
-        <div className="kpi-card">
-          <div className="kpi-label">THEATERS</div>
-          <div className="kpi-value">{theaters.length}</div>
+        <div className="stat-card">
+          <span className="stat-label">Theaters</span>
+          <span className="stat-value">{theaters.length}</span>
         </div>
-        <div className="kpi-card">
-          <div className="kpi-label">CONFIRMED BOOKINGS</div>
-          <div className="kpi-value">{bookings.length}</div>
+        <div className="stat-card">
+          <span className="stat-label">Confirmed Bookings</span>
+          <span className="stat-value">{bookings.length}</span>
         </div>
-        <div className="kpi-card">
-          <div className="kpi-label">REVENUE</div>
-          <div className="kpi-value">₹0.00</div>
+        <div className="stat-card">
+          <span className="stat-label">Revenue</span>
+          <span className="stat-value">₹{totalRevenue.toLocaleString()}</span>
         </div>
       </div>
 
-      {/* Underline Tabs Navigation */}
-      <div className="admin-tab-bar">
-        <button
-          className={`admin-tab-item ${activeTab === 'overview' ? 'active' : ''}`}
-          onClick={() => setActiveTab('overview')}
+      {/* Tab Switcher */}
+      <div className="tab-headers">
+        <button 
+          className={`tab-link ${activeTab === "Overview" ? "active" : ""}`}
+          onClick={() => setActiveTab("Overview")}
         >
           Overview
         </button>
-        <button
-          className={`admin-tab-item ${activeTab === 'movies' ? 'active' : ''}`}
-          onClick={() => setActiveTab('movies')}
+        <button 
+          className={`tab-link ${activeTab === "Movies" ? "active" : ""}`}
+          onClick={() => setActiveTab("Movies")}
         >
           Movies
         </button>
-        <button
-          className={`admin-tab-item ${activeTab === 'theaters' ? 'active' : ''}`}
-          onClick={() => setActiveTab('theaters')}
+        <button 
+          className={`tab-link ${activeTab === "Theaters" ? "active" : ""}`}
+          onClick={() => setActiveTab("Theaters")}
         >
           Theaters
         </button>
-        <button
-          className={`admin-tab-item ${activeTab === 'showtimes' ? 'active' : ''}`}
-          onClick={() => setActiveTab('showtimes')}
+        <button 
+          className={`tab-link ${activeTab === "Showtimes" ? "active" : ""}`}
+          onClick={() => setActiveTab("Showtimes")}
         >
           Showtimes
         </button>
       </div>
 
-      {/* TAB 1: OVERVIEW */}
-      {activeTab === 'overview' && (
-        <div>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: '700', color: '#FFF', marginBottom: '0.75rem' }}>
-            All Bookings
-          </h3>
-          <div style={{ color: '#555A75', fontSize: '0.95rem' }}>No bookings yet.</div>
-        </div>
-      )}
-
-      {/* TAB 2: MOVIES */}
-      {activeTab === 'movies' && (
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#FFFFFF' }}>Films Management</h2>
-            <button className="btn-gold-pill" onClick={openAddModal}>
-              + Add Film
-            </button>
-          </div>
-
-          <div className="films-table-card">
-            <table className="films-table">
-              <thead>
-                <tr>
-                  <th>TITLE</th>
-                  <th>GENRE</th>
-                  <th>DURATION</th>
-                  <th>RATING</th>
-                  <th>SHOWS</th>
-                  <th style={{ textAlign: 'right' }}>ACTIONS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {films.map(film => (
-                  <tr key={film.id}>
-                    <td>
-                      <div className="movie-thumb-cell">
-                        <img src={film.poster} alt={film.title} className="movie-poster-thumb" />
-                        <span className="movie-title-text">{film.title}</span>
-                      </div>
-                    </td>
-                    <td>{film.genre}</td>
-                    <td>{film.duration}</td>
-                    <td><span className="rating-badge">{film.rating}</span></td>
-                    <td>{film.shows || 2}</td>
-                    <td style={{ textAlign: 'right' }}>
-                      <button className="table-action-link edit" onClick={() => openEditModal(film)}>Edit</button>
-                      <button className="table-action-link remove" onClick={() => handleRemoveFilm(film.id, film.title)}>Remove</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 3: THEATERS */}
-      {activeTab === 'theaters' && (
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#FFFFFF' }}>Theaters</h2>
-            <button className="btn-gold-pill" onClick={openAddTheaterModal}>
-              + Add Theater
-            </button>
-          </div>
-
-          <div className="films-table-card">
-            <table className="films-table">
-              <thead>
-                <tr>
-                  <th>NAME</th>
-                  <th>CAPACITY</th>
-                  <th>DESCRIPTION</th>
-                  <th>ACTIVE SHOWS</th>
-                  <th style={{ textAlign: 'right' }}>ACTIONS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {theaters.map(t => (
-                  <tr key={t.id}>
-                    <td className="movie-title-text">{t.name}</td>
-                    <td>{t.capacity}</td>
-                    <td style={{ color: '#9EA6C6' }}>{t.description}</td>
-                    <td>{t.activeShows}</td>
-                    <td style={{ textAlign: 'right' }}>
-                      <button className="table-action-link remove" onClick={() => handleRemoveTheater(t.id, t.name)}>
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 4: SHOWTIMES (Matching Screenshot 1) */}
-      {activeTab === 'showtimes' && (
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#FFFFFF' }}>Showtimes</h2>
-            <button className="btn-gold-pill" onClick={openAddShowtimeModal}>
-              + Add Showtime
-            </button>
-          </div>
-
-          <div className="films-table-card">
-            <table className="films-table">
-              <thead>
-                <tr>
-                  <th>FILM</th>
-                  <th>THEATER</th>
-                  <th>DATE & TIME</th>
-                  <th>PRICE</th>
-                  <th>OCCUPANCY</th>
-                  <th style={{ textAlign: 'right' }}>ACTIONS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {showtimes.map(st => (
-                  <tr key={st.id}>
-                    <td className="movie-title-text">{st.film}</td>
-                    <td style={{ color: '#9EA6C6' }}>{st.theater}</td>
-                    <td style={{ color: '#9EA6C6' }}>{st.dateTime}</td>
-                    <td style={{ color: '#FFFFFF', fontWeight: '700' }}>{st.price}</td>
-                    <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: '140px' }}>
-                        <div style={{ flex: 1, height: '4px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '2px', overflow: 'hidden' }}>
-                          <div style={{ width: '100%', height: '100%', background: 'rgba(255, 255, 255, 0.2)' }} />
-                        </div>
-                        <span style={{ fontSize: '0.8rem', color: '#606684', fontWeight: '600' }}>{st.occupancy}</span>
-                      </div>
-                    </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <button className="table-action-link edit" style={{ color: '#7E85A6' }} onClick={() => openSeatMapModal(st)}>
-                        Seats
-                      </button>
-                      <button className="table-action-link remove" onClick={() => handleRemoveShowtime(st.id, st.film)}>
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* FULL FEATURED EDIT / ADD FILM MODAL */}
-      {isAddFilmModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsAddFilmModalOpen(false)}>
-          <div className="add-film-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="add-film-modal-header">
-              <h2 className="add-film-title">{editingFilmId ? 'Edit Film Details & Images' : 'Add New Film'}</h2>
-              <button type="button" className="close-modal-btn" onClick={() => setIsAddFilmModalOpen(false)}>
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSaveFilm} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-              <div className="form-group">
-                <label className="form-label">MOVIE TITLE</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="e.g. Neon Frontier"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="modal-form-grid-2">
-                <div className="form-group">
-                  <label className="form-label">GENRE</label>
-                  <select className="form-select" value={genre} onChange={(e) => setGenre(e.target.value)}>
-                    <option value="Sci-Fi">Sci-Fi</option>
-                    <option value="Thriller">Thriller</option>
-                    <option value="Drama">Drama</option>
-                    <option value="Action">Action</option>
-                    <option value="Comedy">Comedy</option>
-                    <option value="Horror">Horror</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">RATING</label>
-                  <select className="form-select" value={rating} onChange={(e) => setRating(e.target.value)}>
-                    <option value="PG-13">PG-13</option>
-                    <option value="R">R</option>
-                    <option value="PG">PG</option>
-                    <option value="G">G</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="modal-form-grid-2">
-                <div className="form-group">
-                  <label className="form-label">DURATION (MINUTES)</label>
-                  <input type="number" className="form-input" placeholder="120" value={duration} onChange={(e) => setDuration(e.target.value)} required />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">RELEASE YEAR</label>
-                  <input type="number" className="form-input" placeholder="2026" value={year} onChange={(e) => setYear(e.target.value)} />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">DIRECTOR</label>
-                <input type="text" className="form-input" placeholder="Director full name" value={director} onChange={(e) => setDirector(e.target.value)} />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">CAST (COMMA-SEPARATED)</label>
-                <input type="text" className="form-input" placeholder="David Chen, Sarah Jenkins, Lucas Vance" value={cast} onChange={(e) => setCast(e.target.value)} />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">SYNOPSIS / DESCRIPTION</label>
-                <textarea className="form-textarea" placeholder="Movie storyline..." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
-              </div>
-
-              {/* POSTER IMAGE URL + PREVIEW */}
-              <div className="form-group">
-                <label className="form-label">MOVIE POSTER IMAGE URL (VERTICAL POSTER)</label>
-                <input type="text" className="form-input" placeholder="https://images.unsplash.com/..." value={posterUrl} onChange={(e) => setPosterUrl(e.target.value)} />
-                {posterUrl && (
-                  <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: '#161824', padding: '0.6rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <img src={posterUrl} alt="Poster preview" style={{ width: '45px', height: '65px', borderRadius: '6px', objectFit: 'cover' }} />
-                    <span style={{ fontSize: '0.8rem', color: '#9EA6C6' }}>Live Poster Image Preview</span>
-                  </div>
-                )}
-              </div>
-
-              {/* BANNER BACKDROP IMAGE URL + PREVIEW (Modals & Hero Backdrops) */}
-              <div className="form-group">
-                <label className="form-label">BANNER / BACKDROP BACKGROUND IMAGE URL (MODAL BACKDROP)</label>
-                <input type="text" className="form-input" placeholder="https://images.unsplash.com/..." value={bannerUrl} onChange={(e) => setBannerUrl(e.target.value)} />
-                {bannerUrl && (
-                  <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', background: '#161824', padding: '0.6rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <img src={bannerUrl} alt="Banner preview" style={{ width: '100%', height: '90px', borderRadius: '6px', objectFit: 'cover' }} />
-                    <span style={{ fontSize: '0.8rem', color: '#9EA6C6' }}>Live Modal Background Banner Preview</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="modal-actions-row">
-                <button type="button" className="btn-cancel-modal" onClick={() => setIsAddFilmModalOpen(false)}>Cancel</button>
-                <button type="submit" className="btn-submit-modal">{editingFilmId ? 'Save All Changes' : 'Add Film to Catalog'}</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ADD THEATER MODAL */}
-      {isAddTheaterModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsAddTheaterModalOpen(false)}>
-          <div className="add-film-modal-card" style={{ maxWidth: '460px' }} onClick={(e) => e.stopPropagation()}>
-            <div className="add-film-modal-header">
-              <h2 className="add-film-title">Add Theater</h2>
-              <button type="button" className="close-modal-btn" onClick={() => setIsAddTheaterModalOpen(false)}>
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSaveTheater} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-              <div className="form-group">
-                <label className="form-label">THEATER NAME</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="e.g. Screen 4 — IMAX"
-                  value={tName}
-                  onChange={(e) => setTName(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div>
-                <div className="modal-form-grid-2">
-                  <div className="form-group">
-                    <label className="form-label">ROWS</label>
-                    <input
-                      type="number"
-                      className="form-input"
-                      placeholder="8"
-                      value={rowsCount}
-                      onChange={(e) => setRowsCount(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">SEATS PER ROW</label>
-                    <input
-                      type="number"
-                      className="form-input"
-                      placeholder="12"
-                      value={seatsPerRow}
-                      onChange={(e) => setSeatsPerRow(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-                <div style={{ marginTop: '0.45rem', fontSize: '0.82rem', color: '#606684', fontWeight: '500' }}>
-                  Total capacity: {(parseInt(rowsCount) || 0) * (parseInt(seatsPerRow) || 0)} seats
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">DESCRIPTION</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Brief description"
-                  value={tDescription}
-                  onChange={(e) => setTDescription(e.target.value)}
-                />
-              </div>
-
-              <div className="modal-actions-row" style={{ marginTop: '0.5rem' }}>
-                <button type="button" className="btn-cancel-modal" style={{ flex: 1 }} onClick={() => setIsAddTheaterModalOpen(false)}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn-submit-modal" style={{ flex: 1 }}>
-                  Add Theater
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ADD SHOWTIME MODAL */}
-      {isAddShowtimeModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsAddShowtimeModalOpen(false)}>
-          <div className="add-film-modal-card" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
-            <div className="add-film-modal-header">
-              <h2 className="add-film-title">Add Showtime</h2>
-              <button type="button" className="close-modal-btn" onClick={() => setIsAddShowtimeModalOpen(false)}>
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSaveShowtime} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-              <div className="form-group">
-                <label className="form-label">FILM</label>
-                <select
-                  className="form-select"
-                  value={selectedFilmForShow}
-                  onChange={(e) => setSelectedFilmForShow(e.target.value)}
-                >
-                  {films.map(f => (
-                    <option key={f.id} value={f.title}>{f.title}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">THEATER</label>
-                <select
-                  className="form-select"
-                  value={selectedTheaterForShow}
-                  onChange={(e) => setSelectedTheaterForShow(e.target.value)}
-                >
-                  {theaters.map(t => (
-                    <option key={t.id} value={t.name}>{t.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">DATE & TIME</label>
-                <input
-                  type="datetime-local"
-                  className="form-input"
-                  value={showDateTime}
-                  onChange={(e) => setShowDateTime(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">TICKET PRICE (₹)</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  placeholder="250"
-                  value={ticketPrice}
-                  onChange={(e) => setTicketPrice(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="modal-actions-row" style={{ marginTop: '0.5rem' }}>
-                <button type="button" className="btn-cancel-modal" style={{ flex: 1 }} onClick={() => setIsAddShowtimeModalOpen(false)}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn-submit-modal" style={{ flex: 1 }}>
-                  Add Showtime
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* SEAT MAP MODAL FOR ADMIN (Matching exact user screenshot) */}
-      {selectedSeatMapShowtime && (
-        <div className="modal-overlay" onClick={() => setSelectedSeatMapShowtime(null)}>
-          <div
-            className="add-film-modal-card"
-            style={{ maxWidth: '580px', padding: '2rem' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="add-film-modal-header" style={{ marginBottom: '0.75rem' }}>
-              <h2 className="add-film-title" style={{ fontSize: '1.6rem' }}>
-                Seat Map — {selectedSeatMapShowtime.theater}
-              </h2>
-              <button type="button" className="close-modal-btn" onClick={() => setSelectedSeatMapShowtime(null)}>
-                <X size={20} />
-              </button>
-            </div>
-
-            <p style={{ color: '#7E85A6', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-              Click available seats to block/unblock them for maintenance.
-            </p>
-
-            {/* Screen Line Indicator */}
-            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-              <div style={{
-                fontSize: '0.75rem',
-                fontWeight: '700',
-                letterSpacing: '2px',
-                color: '#4E5370',
-                marginBottom: '0.6rem',
-                textTransform: 'uppercase'
-              }}>
-                SCREEN
-              </div>
-              <div style={{
-                height: '3px',
-                background: 'linear-gradient(90deg, transparent 0%, rgba(200, 153, 69, 0.4) 50%, transparent 100%)',
-                borderRadius: '50%',
-                width: '80%',
-                margin: '0 auto'
-              }} />
-            </div>
-
-            {/* Seat Matrix Grid (Rows A to F, 10 Seats per Row) */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', alignItems: 'center', marginBottom: '2rem' }}>
-              {['A', 'B', 'C', 'D', 'E', 'F'].map((rowLetter) => {
-                const blockedList = blockedSeatsMap[selectedSeatMapShowtime.id] || [];
-                return (
-                  <div key={rowLetter} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#606684', width: '15px', textAlign: 'center' }}>
-                      {rowLetter}
-                    </span>
-                    <div style={{ display: 'flex', gap: '0.45rem' }}>
-                      {Array.from({ length: 10 }).map((_, idx) => {
-                        const seatNum = idx + 1;
-                        const seatCode = `${rowLetter}${seatNum}`;
-                        const isBlocked = blockedList.includes(seatCode);
-
-                        // Mock some reserved seats to match screenshot layout
-                        const isReserved = ['B4', 'B5', 'C6', 'D7', 'E1', 'E2', 'F9'].includes(seatCode) && !isBlocked;
-
-                        let bgColor = '#363B54'; // Available (Dark Purple/Blue)
-                        if (isBlocked) bgColor = '#4A1E26'; // Blocked (Dark Red)
-                        else if (isReserved) bgColor = '#181A26'; // Reserved/Sold
-
+      {/* Tab Body */}
+      <div style={styles.tabContent}>
+        {activeTab === "Overview" && (
+          <div className="animate-fade-in" style={styles.gridSplit}>
+            {/* Recent Bookings Table */}
+            <div className="premium-card" style={{ flex: 2 }}>
+              <h3 style={styles.cardTitle}>Recent Bookings</h3>
+              {bookings.length === 0 ? (
+                <p style={styles.emptyText}>No bookings found.</p>
+              ) : (
+                <div style={styles.tableWrapper}>
+                  <table style={styles.table}>
+                    <thead>
+                      <tr>
+                        <th style={styles.th}>Booking ID</th>
+                        <th style={styles.th}>Movie</th>
+                        <th style={styles.th}>Customer</th>
+                        <th style={styles.th}>Seats</th>
+                        <th style={styles.th}>Amount</th>
+                        <th style={styles.th}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bookings.map((booking) => {
+                        const movie = movies.find(m => m.id === booking.movieId);
                         return (
-                          <button
-                            key={seatCode}
-                            type="button"
-                            title={isBlocked ? `Seat ${seatCode} (Blocked for maintenance)` : `Seat ${seatCode}`}
-                            onClick={() => toggleBlockSeat(selectedSeatMapShowtime.id, seatCode)}
-                            style={{
-                              width: '32px',
-                              height: '32px',
-                              borderRadius: '6px',
-                              backgroundColor: bgColor,
-                              border: isBlocked ? '1px solid #7E2A38' : '1px solid rgba(255, 255, 255, 0.05)',
-                              cursor: 'pointer',
-                              transition: 'transform 0.15s ease, background-color 0.15s ease'
-                            }}
-                          />
+                          <tr key={booking.id} style={styles.tr}>
+                            <td style={styles.td}><code style={{ color: "var(--primary-light)" }}>{booking.id}</code></td>
+                            <td style={styles.td}>{movie ? movie.title : "Unknown Movie"}</td>
+                            <td style={styles.td}>
+                              <div style={{ display: "flex", flexDirection: "column" }}>
+                                <span>{booking.userName}</span>
+                                <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>{booking.userEmail}</span>
+                              </div>
+                            </td>
+                            <td style={styles.td}>{booking.seats.join(", ")}</td>
+                            <td style={styles.td}><span style={{ color: "var(--primary-light)" }}>₹{booking.totalAmount}</span></td>
+                            <td style={styles.td}>
+                              <button 
+                                onClick={() => handleDeleteBooking(booking.id)}
+                                style={styles.deleteActionBtn}
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </td>
+                          </tr>
                         );
                       })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Quick Actions Panel */}
+            <div className="premium-card" style={{ flex: 1, height: "fit-content" }}>
+              <h3 style={styles.cardTitle}>System Activity</h3>
+              <div style={styles.activityList}>
+                <div style={styles.activityItem}>
+                  <CheckCircle size={16} color="var(--success)" style={{ minWidth: "16px" }} />
+                  <div>
+                    <p style={{ fontSize: "13px" }}>Database Online</p>
+                    <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>System loaded all core modules</span>
+                  </div>
+                </div>
+                <div style={styles.activityItem}>
+                  <Monitor size={16} color="var(--primary)" style={{ minWidth: "16px" }} />
+                  <div>
+                    <p style={{ fontSize: "13px" }}>Vite Fronted Active</p>
+                    <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>Running on port 5173</span>
+                  </div>
+                </div>
+                <div style={styles.activityItem}>
+                  <Video size={16} color="var(--primary)" style={{ minWidth: "16px" }} />
+                  <div>
+                    <p style={{ fontSize: "13px" }}>Member Portal Available</p>
+                    <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>Ready for seat reservations</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "Movies" && (
+          <div className="animate-fade-in" style={styles.gridSplit}>
+            {/* Movies List */}
+            <div className="premium-card" style={{ flex: 1.8 }}>
+              <h3 style={styles.cardTitle}>Manage Films</h3>
+              <div style={styles.movieGrid}>
+                {movies.map((movie) => (
+                  <div key={movie.id} style={styles.movieListItem}>
+                    <img src={movie.poster} alt={movie.title} style={styles.movieListPoster} />
+                    <div style={styles.movieListInfo}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                        <h4 style={styles.movieListTitle}>{movie.title}</h4>
+                        <button 
+                          onClick={() => handleDeleteMovie(movie.id)}
+                          style={styles.deleteActionBtn}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                      <p style={styles.movieListMeta}>
+                        <span>{movie.genre}</span> • <span>{movie.duration}</span> • <span style={{ color: "var(--primary-light)" }}>★ {movie.rating}</span>
+                      </p>
+                      <p style={styles.movieListDesc}>{movie.description}</p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-
-            {/* Seat Map Legend (Matching Screenshot) */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justify: 'center',
-              gap: '2rem',
-              marginBottom: '2rem',
-              fontSize: '0.85rem',
-              color: '#8E95B3'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#363B54', display: 'inline-block' }} />
-                <span>Available</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#4A1E26', border: '1px solid #7E2A38', display: 'inline-block' }} />
-                <span>Blocked</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#181A26', display: 'inline-block' }} />
-                <span>Reserved/Sold</span>
+                ))}
               </div>
             </div>
 
-            {/* Full-width Close Button (Matching Screenshot) */}
-            <button
-              type="button"
-              onClick={() => setSelectedSeatMapShowtime(null)}
-              style={{
-                width: '100%',
-                padding: '0.9rem',
-                backgroundColor: '#1B1D2A',
-                color: '#FFFFFF',
-                fontWeight: '700',
-                fontSize: '0.95rem',
-                borderRadius: '12px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              Close
-            </button>
+            {/* Add Movie Form */}
+            <div className="premium-card" style={{ flex: 1.2, height: "fit-content" }}>
+              <h3 style={styles.cardTitle}>Add Film</h3>
+              <form onSubmit={handleAddMovie}>
+                <div className="form-group">
+                  <label className="form-label">Title</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="e.g. Inception"
+                    value={newMovie.title}
+                    onChange={(e) => setNewMovie({...newMovie, title: e.target.value})}
+                    required
+                  />
+                </div>
+                <div style={{ display: "flex", gap: "12px" }}>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Genre</label>
+                    <select 
+                      className="form-input" 
+                      value={newMovie.genre}
+                      onChange={(e) => setNewMovie({...newMovie, genre: e.target.value})}
+                      style={{ appearance: "none" }}
+                    >
+                      <option value="Sci-Fi">Sci-Fi</option>
+                      <option value="Action">Action</option>
+                      <option value="Thriller">Thriller</option>
+                      <option value="Romance">Romance</option>
+                      <option value="Horror">Horror</option>
+                      <option value="Drama">Drama</option>
+                    </select>
+                  </div>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Rating</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. 8.8"
+                      value={newMovie.rating}
+                      onChange={(e) => setNewMovie({...newMovie, rating: e.target.value})}
+                      required
+                    />
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: "12px" }}>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Duration</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. 2h 20m"
+                      value={newMovie.duration}
+                      onChange={(e) => setNewMovie({...newMovie, duration: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Ticket Price</label>
+                    <input 
+                      type="number" 
+                      className="form-input" 
+                      value={newMovie.ticketPrice}
+                      onChange={(e) => setNewMovie({...newMovie, ticketPrice: Number(e.target.value)})}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Poster URL (Optional)</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="https://unsplash.com/..."
+                    value={newMovie.poster}
+                    onChange={(e) => setNewMovie({...newMovie, poster: e.target.value})}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Description</label>
+                  <textarea 
+                    className="form-input" 
+                    rows="3" 
+                    placeholder="A brief summary..."
+                    value={newMovie.description}
+                    onChange={(e) => setNewMovie({...newMovie, description: e.target.value})}
+                    style={{ resize: "none" }}
+                  />
+                </div>
+                <button type="submit" className="btn-primary">
+                  <Plus size={16} />
+                  <span>Add Movie</span>
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {activeTab === "Theaters" && (
+          <div className="animate-fade-in" style={styles.gridSplit}>
+            {/* Theaters List */}
+            <div className="premium-card" style={{ flex: 1.5 }}>
+              <h3 style={styles.cardTitle}>Screens & Seating</h3>
+              <div style={styles.theatersGrid}>
+                {theaters.map((theater) => (
+                  <div key={theater.id} style={styles.theaterCard}>
+                    <div style={styles.theaterHeader}>
+                      <h4 style={styles.theaterName}>{theater.name}</h4>
+                      <span className="gold-badge">{theater.capacity} Seats</span>
+                    </div>
+                    <p style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "16px" }}>
+                      Seating configuration: {theater.rows} rows × {theater.cols} columns
+                    </p>
+                    
+                    {/* Visual Mini Seating Map */}
+                    <div style={styles.miniSeatingGrid}>
+                      {Array.from({ length: Math.min(theater.rows, 5) }).map((_, r) => (
+                        <div key={r} style={{ display: "flex", gap: "3px", justifyContent: "center" }}>
+                          {Array.from({ length: Math.min(theater.cols, 10) }).map((_, c) => (
+                            <div 
+                              key={c} 
+                              style={{ 
+                                width: "6px", 
+                                height: "6px", 
+                                background: "var(--border-color)", 
+                                borderRadius: "1px" 
+                              }}
+                            />
+                          ))}
+                        </div>
+                      ))}
+                      {(theater.rows > 5 || theater.cols > 10) && (
+                        <span style={{ fontSize: "9px", color: "var(--text-muted)", marginTop: "4px" }}>+ more seats</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Add Screen Form */}
+            <div className="premium-card" style={{ flex: 1, height: "fit-content" }}>
+              <h3 style={styles.cardTitle}>Add Screen</h3>
+              <form onSubmit={handleAddTheater}>
+                <div className="form-group">
+                  <label className="form-label">Screen Name</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="e.g. Screen 4 - Ultra VIP"
+                    value={newTheater.name}
+                    onChange={(e) => setNewTheater({...newTheater, name: e.target.value})}
+                    required
+                  />
+                </div>
+                <div style={{ display: "flex", gap: "12px" }}>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Rows</label>
+                    <input 
+                      type="number" 
+                      className="form-input" 
+                      value={newTheater.rows}
+                      onChange={(e) => setNewTheater({...newTheater, rows: e.target.value})}
+                      min="4"
+                      max="12"
+                      required
+                    />
+                  </div>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Columns</label>
+                    <input 
+                      type="number" 
+                      className="form-input" 
+                      value={newTheater.cols}
+                      onChange={(e) => setNewTheater({...newTheater, cols: e.target.value})}
+                      min="6"
+                      max="15"
+                      required
+                    />
+                  </div>
+                </div>
+                <p style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "16px" }}>
+                  Total Capacity: {newTheater.rows * newTheater.cols} seats
+                </p>
+                <button type="submit" className="btn-primary">
+                  <Plus size={16} />
+                  <span>Create Screen</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "Showtimes" && (
+          <div className="animate-fade-in" style={styles.gridSplit}>
+            {/* Showtimes List */}
+            <div className="premium-card" style={{ flex: 1.8 }}>
+              <h3 style={styles.cardTitle}>Schedule List</h3>
+              {showtimes.length === 0 ? (
+                <p style={styles.emptyText}>No shows scheduled.</p>
+              ) : (
+                <div style={styles.tableWrapper}>
+                  <table style={styles.table}>
+                    <thead>
+                      <tr>
+                        <th style={styles.th}>Film</th>
+                        <th style={styles.th}>Screen</th>
+                        <th style={styles.th}>Date & Time</th>
+                        <th style={styles.th}>Type</th>
+                        <th style={styles.th}>Price Factor</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {showtimes.map((showtime) => {
+                        const movie = movies.find(m => m.id === showtime.movieId);
+                        const theater = theaters.find(t => t.id === showtime.theaterId);
+                        return (
+                          <tr key={showtime.id} style={styles.tr}>
+                            <td style={styles.td}><strong style={{ color: "#ffffff" }}>{movie ? movie.title : "Unknown Film"}</strong></td>
+                            <td style={styles.td}>{theater ? theater.name : "Unknown Screen"}</td>
+                            <td style={styles.td}>
+                              <div style={{ display: "flex", flexDirection: "column" }}>
+                                <span>{showtime.time}</span>
+                                <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>{showtime.date}</span>
+                              </div>
+                            </td>
+                            <td style={styles.td}><span className="gold-badge" style={{ textTransform: "none" }}>{showtime.type}</span></td>
+                            <td style={styles.td}><span style={{ color: "var(--primary-light)" }}>{showtime.priceMultiplier}x</span></td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Schedule Form */}
+            <div className="premium-card" style={{ flex: 1.2, height: "fit-content" }}>
+              <h3 style={styles.cardTitle}>Schedule Show</h3>
+              <form onSubmit={handleAddShowtime}>
+                <div className="form-group">
+                  <label className="form-label">Select Film</label>
+                  <select 
+                    className="form-input"
+                    value={newShowtime.movieId}
+                    onChange={(e) => setNewShowtime({...newShowtime, movieId: e.target.value})}
+                    required
+                  >
+                    <option value="">-- Choose Movie --</option>
+                    {movies.map(m => (
+                      <option key={m.id} value={m.id}>{m.title}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Select Screen</label>
+                  <select 
+                    className="form-input"
+                    value={newShowtime.theaterId}
+                    onChange={(e) => setNewShowtime({...newShowtime, theaterId: e.target.value})}
+                    required
+                  >
+                    <option value="">-- Choose Screen --</option>
+                    {theaters.map(t => (
+                      <option key={t.id} value={t.id}>{t.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div style={{ display: "flex", gap: "12px" }}>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Time</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. 07:00 PM"
+                      value={newShowtime.time}
+                      onChange={(e) => setNewShowtime({...newShowtime, time: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Date</label>
+                    <select 
+                      className="form-input"
+                      value={newShowtime.date}
+                      onChange={(e) => setNewShowtime({...newShowtime, date: e.target.value})}
+                    >
+                      <option value="Today">Today</option>
+                      <option value="Tomorrow">Tomorrow</option>
+                      <option value="This Friday">This Friday</option>
+                    </select>
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: "12px" }}>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Screen Type</label>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="e.g. Premiere Suite"
+                      value={newShowtime.type}
+                      onChange={(e) => setNewShowtime({...newShowtime, type: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label className="form-label">Price Multiplier</label>
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      min="1.0" 
+                      max="3.0"
+                      className="form-input" 
+                      value={newShowtime.priceMultiplier}
+                      onChange={(e) => setNewShowtime({...newShowtime, priceMultiplier: e.target.value})}
+                      required
+                    />
+                  </div>
+                </div>
+                <button type="submit" className="btn-primary">
+                  <Plus size={16} />
+                  <span>Add Show to Calendar</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
+const styles = {
+  dashboardContainer: {
+    padding: "24px 40px",
+    maxWidth: "1280px",
+    margin: "0 auto",
+    color: "var(--text-primary)"
+  },
+  navbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: "20px",
+    borderBottom: "1px solid var(--border-color)",
+    marginBottom: "32px"
+  },
+  navBrand: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px"
+  },
+  brandText: {
+    fontSize: "20px",
+    fontWeight: "bold",
+    letterSpacing: "1px",
+    fontFamily: "var(--font-serif)"
+  },
+  navActions: {
+    display: "flex",
+    alignItems: "center"
+  },
+  signOutBtn: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    background: "transparent",
+    color: "var(--text-secondary)",
+    border: "none",
+    fontSize: "13px",
+    fontWeight: "500",
+    cursor: "pointer",
+    transition: "color 0.2s ease"
+  },
+  dashboardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "28px"
+  },
+  headerTitleGroup: {
+    display: "flex",
+    alignItems: "center",
+    gap: "16px"
+  },
+  mainTitle: {
+    fontSize: "36px",
+    fontFamily: "var(--font-serif)",
+    color: "#ffffff"
+  },
+  tabContent: {
+    marginTop: "24px"
+  },
+  gridSplit: {
+    display: "flex",
+    gap: "28px",
+    alignItems: "flex-start"
+  },
+  cardTitle: {
+    fontSize: "18px",
+    fontWeight: "600",
+    marginBottom: "20px",
+    color: "#ffffff",
+    borderBottom: "1px solid var(--border-color)",
+    paddingBottom: "10px"
+  },
+  emptyText: {
+    color: "var(--text-muted)",
+    fontSize: "14px",
+    textAlign: "center",
+    padding: "32px 0"
+  },
+  tableWrapper: {
+    overflowX: "auto"
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    textAlign: "left"
+  },
+  th: {
+    padding: "12px 16px",
+    borderBottom: "2px solid var(--border-color)",
+    color: "var(--text-secondary)",
+    fontSize: "11px",
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em"
+  },
+  tr: {
+    borderBottom: "1px solid var(--border-color)",
+    transition: "background 0.2s ease"
+  },
+  td: {
+    padding: "16px",
+    fontSize: "13px",
+    color: "var(--text-primary)"
+  },
+  deleteActionBtn: {
+    background: "transparent",
+    border: "none",
+    color: "var(--text-muted)",
+    cursor: "pointer",
+    transition: "color 0.2s ease",
+    padding: "4px"
+  },
+  activityList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "18px"
+  },
+  activityItem: {
+    display: "flex",
+    gap: "12px",
+    alignItems: "flex-start"
+  },
+  movieGrid: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px"
+  },
+  movieListItem: {
+    display: "flex",
+    gap: "18px",
+    background: "rgba(10, 10, 15, 0.4)",
+    border: "1px solid var(--border-color)",
+    borderRadius: "var(--border-radius-sm)",
+    padding: "16px",
+    transition: "border-color 0.2s ease"
+  },
+  movieListPoster: {
+    width: "60px",
+    height: "90px",
+    objectFit: "cover",
+    borderRadius: "4px",
+    border: "1px solid var(--border-color)"
+  },
+  movieListInfo: {
+    flex: 1
+  },
+  movieListTitle: {
+    fontSize: "16px",
+    color: "#ffffff",
+    fontWeight: "600"
+  },
+  movieListMeta: {
+    fontSize: "12px",
+    color: "var(--text-secondary)",
+    margin: "4px 0 8px 0"
+  },
+  movieListDesc: {
+    fontSize: "12px",
+    color: "var(--text-muted)",
+    lineHeight: "1.4",
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden"
+  },
+  theatersGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: "16px"
+  },
+  theaterCard: {
+    background: "rgba(10, 10, 15, 0.4)",
+    border: "1px solid var(--border-color)",
+    borderRadius: "var(--border-radius-sm)",
+    padding: "20px"
+  },
+  theaterHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "8px"
+  },
+  theaterName: {
+    fontSize: "15px",
+    color: "#ffffff",
+    fontWeight: "600"
+  },
+  miniSeatingGrid: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "3px",
+    padding: "12px",
+    background: "rgba(0, 0, 0, 0.2)",
+    borderRadius: "4px",
+    alignItems: "center"
+  }
+};
